@@ -1,0 +1,434 @@
+
+p{
+  font-family: 'Assistant', sans-serif;
+}
+h1{
+    font-family: 'Assistant', sans-serif;
+
+}
+body, html {
+  margin: 0;
+  padding: 0;
+}
+.index{
+  position: relative;
+}
+.TowGs {
+  position: absolute;
+}
+.header-container {
+  position: fixed;
+  top: 10px; /* This is necessary */
+  z-index: 4;
+  width: 95%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #050E3F;
+  border-radius: 8px;
+  padding: 8px 24px;
+  margin: 0 auto;
+  justify-self: center;
+}
+.header-container p {
+  display: inline-block; /* Allows transform to apply cleanly */
+  transition: transform 0.2s ease; /* Smooth animation */
+  
+}
+
+.header-container p:hover {
+  transform: scale(1.1); /* Grows the text slightly */
+}
+.container{
+   display: flex;
+  flex-direction: row;
+  gap: 16px;
+  cursor: pointer;
+}
+
+p{
+  font-family: 'Assistant', sans-serif;
+  color: white;
+  font-size: 18px;
+  padding: 8px 24px;
+}
+
+.trans-plai-button{
+ background-color: #FFFFFF ;
+}
+button {
+  padding: 8px 24px;
+  height: 48px;
+  align-self: center;
+}
+.group-A {
+  width: 100%;
+  position: relative;
+  aspect-ratio: 16 / 9; /* or adjust to your image */
+  max-height: 700px;
+
+}
+.backgroundimg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  z-index: 0;
+  max-height: 700px;
+}
+
+.transbutton{
+background-color: transparent;
+color: white;
+border: white solid 1px;
+box-shadow: none;
+}
+#but{
+background-color: transparent;
+color: white;
+border: white solid 1px;
+box-shadow: none;
+}
+#but:hover{
+background-color: white;
+color: black;
+}
+
+.group-A h1 {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  z-index: 2;
+  text-align: center;
+  font-family: 'Assistant', sans-serif;
+}
+
+.MainCard{
+  width: 268px;
+  height: 152px;
+background: linear-gradient(to bottom, #9F5BF166, #9F5BF166, #803BD266);
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  padding: 24px;
+  gap: 16px;
+  margin-top: 100px;
+  justify-content: space-around;
+}
+.MainCard button{
+
+  width: 100%;
+  height: 48px;
+  border-radius: 8px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+  font-size: 20px;
+  font-family: 'Assistant', sans-serif;
+  border-style: none;
+}
+button{
+ height: 48px;
+  border-radius: 8px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+  font-size: 20px;
+  font-family: 'Assistant', sans-serif;
+  border-style: none;
+}
+
+.group-B{
+  margin: 0%;
+  padding: 0;
+  background-image: url('../public/images/backgrad.png'); /* or a full URL */
+  width: 100%;
+  background-size: cover;        /* or use 'contain' if you want it to fit inside */
+  background-repeat: no-repeat;  /* disables tiling */
+  background-position: center;   /* centers the image */
+}
+
+.threevalues{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.threevalues img{
+
+  width: 40px;
+  height: 40px;
+}
+
+.bluetext{
+  margin-top: 150px;
+  background-color: #050E3F;
+  padding: 24px;
+  font-size: 32px;
+  font-family: 'Assistant', sans-serif;
+  font-weight: 600;
+  width: 60%;
+  align-self: center;
+  justify-self: center;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.Group-c{
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  width: 90%;
+  align-self: center;
+  justify-self: center;
+}
+h1{
+  color: white;
+  font-size: 40px;
+}
+.rolenumber{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 15px;
+}
+.HowToPlay{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  align-self: center;
+  flex-direction: row-reverse; 
+}
+.roles{
+  background-color: #803BD2;
+  width: 21%;
+  border-radius: 8px;
+  padding: 16px;
+}
+.Group-c h1{
+  width: 100%;
+  text-align: end;
+  
+}
+
+.rolenumber p{
+  width: fit-content;
+  margin: 0;
+  align-self: center;
+  font-size: 32px;
+  font-weight: 600;
+  text-align: end;
+}
+.rolenumber h1{
+  width: fit-content;
+  margin: 0;
+}  
+.roles p{
+    text-align: end;
+    padding-right: 0;  
+  }
+  .groupPhone{
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: 100px;
+    width: 83%; 
+   align-self: center;
+    background-color: #803BD2;
+    justify-self: center;
+    border-radius: 8px;
+    padding: 0px 64px;
+    align-items: center;
+  }
+  .groupPhone img{
+    width: 50%;
+  }
+
+  .textInPhone{
+    text-align: end;
+    font-size: 40px;
+    font-weight: 700;
+    margin-right: 0;
+    padding-right: 0;
+  }
+
+  .textInPhone p{
+    font-size: 32px;
+    font-weight: 600;
+    padding: 0;
+  }
+  .group-Advantages{
+    width: 90%;
+    margin-top: 150px;
+    text-align: end;
+    align-self: center;
+    justify-self: center;
+    gap: 36px;
+    padding-top: 40px;
+  }
+  .startran{
+    width: 40px;
+    height: 40px; 
+    align-self: center;
+    justify-self: center;
+   }
+
+   .towItems{
+    
+    justify-self: center;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 40px;
+
+   }
+.start{
+ 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.threeItems{
+  width: 100%;
+}
+.start p{
+  font-size: 32px;
+  font-weight: 600;
+}
+.GroupQuestions{
+  margin-top: 150px;
+  width: 90%;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  justify-content: end;
+  flex-direction: column;
+  text-align: right;
+  padding-bottom: 100px;
+}
+.ListOfQuestions{
+  width: 80%;
+  justify-self: center;
+  align-self: center;
+  margin-top: 48px;
+  gap: 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+.QuArr{
+display: flex;
+flex-direction: row-reverse;
+justify-content: space-between;
+padding-bottom: 10px;
+
+}
+.QuArr p{
+  font-size: 20px;
+  margin: 0%;
+  padding: 0;
+
+}
+.QuArr img{
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease;
+
+}
+.QandA{
+  border-bottom: #FFFFFF solid 1px;
+  transition: height 0.9s ease;
+
+}
+.Answer p{
+  margin: 0%;
+  padding: 0;
+  font-size: 20px;
+}
+.Answer{
+  display: none;
+}
+
+.up{
+  transform: rotate(180deg);
+}
+.Video{
+  width: 72%;
+  justify-self: center;
+  padding: 8px;
+  border: #424242 solid 1px;
+  border-radius: 8px;
+}
+.Video video{
+  width: 100%;
+  border-radius: 8px;
+}
+
+.Footer{
+  margin-top: 200px;
+}
+
+.FooterPixa{
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 25px;
+  height: 200px;
+  background-color:  #5b26b0;
+  position: relative;
+}
+.FooterPixa img{
+  position: absolute;
+}
+.FooterPixa div{
+  position: absolute;
+ top: 50%;
+ left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+}
+.imginfooter{
+  position:absolute;
+   top: 50%;
+  left: 95%;
+  transform: translate(-50%, -50%);
+}
+.FooterPixa> div > *{
+  margin: 0;
+  align-self: center;
+  justify-self: center;
+}
+.FooterPlai{
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  height: 150px;
+  align-items: center;
+  margin: 0px 5%;
+}
+.FooterPlai img{
+  width: 150px;
+  height: 50px;
+}
+.FooterPlai p{
+  width: 50%;
+  text-align: center;
+}
+.FooterPlai div{
+  display:  flex;
+  flex-direction: row;
+  gap: 30px;
+}
