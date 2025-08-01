@@ -1,8 +1,12 @@
 export default function Tip(props){
     return(
-        <div>
-            <p>{props.tile}</p>
-            <p>{props.tip}</p>
+        <div className="Tip">
+            <div>
+                <h2>{props.title}</h2>
+                <p>{props.tip}</p>
+            </div>
+            <img src="/images/threestar.svg" alt="" />
+            
         </div>
     )
 }

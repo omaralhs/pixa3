@@ -37,16 +37,158 @@
 .imagee img{
     width: 100%;
     height: 100%;
+    justify-self: center;
+    align-self: center;
+}
+.imagee h1{
+    text-align: center;
+}
+.subs > * {
+  height: 300px; /* fixed height for each grid item */
+}
+.subs::-webkit-scrollbar {
+  width: 16px;
+  height: 12px;
+}
+.subs::-webkit-scrollbar-thumb {
+  background-color: #6b46c1;
+  border-radius: 8px;
+  border: 3px solid #f3f3f3;
+}
+.subs::-webkit-scrollbar-thumb:hover {
+  background-color: #553c9a;
+}
+.subs::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 8px;
 }
 .subs{  
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
         width: 55%;
         height: 100%;
         background-color: #4d1989;
         border-radius: 8px;
         border: #ffffff33 solid 2px;
-}
+        padding: 24px;
+        max-height: 95%;
+        overflow-y: auto;   /* enable vertical scroll when content overflows */
+    
+        }
 .buttons{
     width: 70%;
     align-self: center;
     width: 70%;
+}
+
+.Sub{
+    background-color: #4e54c8;
+    border-radius: 8px;
+    position: relative;
+
+
+}
+.Sub img{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+.SubInfo{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    justify-content: space-between;
+    width: 100%;
+    height: 10%;
+    background-color: #ffffff99;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    align-items: center;
+
+}
+.SubInfo p{
+    margin: 0;
+    padding: 0;
+    color:  #091747;
+    font-size: 16px;
+    font-weight: bold;
+    padding:0px 12px;
+    overflow: hidden;           /* Hide overflowing text */
+
+}
+
+.Tip{
+    background-color: #080f3a;
+    padding: 16px 24px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.Tip h2{
+    color: white;
+    text-align: end;
+    margin: 0;
+    padding: 0;
+}
+.Tip p{
+    color: white;
+    text-align: end;
+    margin: 0;
+    padding: 0;
+}
+.inputsandtips{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.inputsandtips h3{
+    color: white;
+    text-align: end;
+    font-size: 24px;
+    font-weight: 600;
+}
+.InputIcon{
+    width: 100%;
+    height: 30%;
+    position: relative;
+    border: white solid 1px;
+    border-radius: 8px;
+    display: flex;
+    
+
+}
+.InputIcon button{
+   position: absolute;
+   bottom: 0;
+   margin-bottom: 5px;
+   margin-left: 5px;
+}
+.InputIcon input{
+    width: 95%;
+    height: 100%;
+    position: absolute;
+    background: transparent;
+    border: none;
+    text-align: right;
+    font-size: 18px;
+    color: white;
+    padding-right: 24px;}
+
+input:focus {
+  border-color: none;
+  outline: none;
+}
+.imglogo{
+    margin-top: 50px;
+    margin-left: 50px;
+    width: 5%;
 }

@@ -3,7 +3,10 @@ import '../App.css';
 import Tip from '../components/Tip';
 import useImageGenerator from '../hooks/useImageGenerator';
 import SaveSub from '../hooks/SaveSub';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+// Call this on success:
 function GamePhone() {
   const { prompt, setPrompt, imageURL, loading, handleGenerate } = useImageGenerator();
   
@@ -12,10 +15,11 @@ function GamePhone() {
 
   return (
     <div className="Gamepage">
-      <h1>qweasd</h1>
+      <img className='imglogo' src="images/plailogo.svg" alt="logo" />
+      <ToastContainer />
       <div className="ImageAndSubs">
         <div className="imagee">
-          <img src={imageURL || "./images/robot.png"} alt="Generated" />
+          {!imageURL ? <h1>your image will show up here</h1> : <img src={imageURL} alt="Generated" />}
         </div>
 
         <div className="inputsandtips">
@@ -29,9 +33,11 @@ function GamePhone() {
             <button onClick={handleGenerate}>send</button>
           </div>
 
-          <h3>איך לכתוב פרומט שייצר תמונה זהה:</h3>
-          <Tip title={"להיות מדויקים"} tip={"לתאר את הפרטים המרכזים בתמונה"} />
-          <Tip title={"להיות מדויקים"} tip={"לתאר את הפרטים המרכזים בתמונה"} />
+          <div>
+            <h3>איך לכתוב פרומט שייצר תמונה זהה:</h3>
+            <Tip title={"להיות מדויקים"} tip={"לתאר את הפרטים המרכזים בתמונה"} />
+           <Tip title={"להיות מדויקים"} tip={"לתאר את הפרטים המרכזים בתמונה"} />
+          </div>
         </div>
       </div>
       <button onClick={()=>SaveSub(prompt,imageURL,"RAN M","GOOD PROMPT MY BOY","77")}>submit</button>

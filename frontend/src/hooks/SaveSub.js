@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 export default async function saveSubmission(prompt, imageURL,user_name,tip,score) {
   const res = await fetch('http://localhost:5000/save', {
     method: 'POST',
@@ -5,5 +7,6 @@ export default async function saveSubmission(prompt, imageURL,user_name,tip,scor
     body: JSON.stringify({ prompt, imageURL,user_name,score,tip }),
   });
   console.log(res)
-  console.log("in front")
+  toast.success("ההגשה נשמרה בהצלחה!");
+  
 }

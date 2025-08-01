@@ -21,6 +21,9 @@ const db = new pg.Client({
     port: 5432,
 });
 
+
+
+
 db.connect()
   .then(() => console.log("Connected to PostgreSQL"))
   .catch(err => console.error("Database connection error:", err));
@@ -28,7 +31,7 @@ db.connect()
 /**
  * GET all submissions
  */
-app.get('/api/submissions', (req, res) => {
+app.post('/GetSubs', (req, res) => {
     db.query("SELECT * FROM submission", (err, result) => {
         if (err) {
             console.error("Error querying database:", err);
