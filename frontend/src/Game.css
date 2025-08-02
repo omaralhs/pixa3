@@ -192,3 +192,90 @@ input:focus {
     margin-left: 50px;
     width: 5%;
 }
+
+.MainGroup{
+    display: flex;
+    flex-direction: column;
+    align-items: right;
+    width: 70%;
+    height: 70%;
+    justify-self: center;
+    align-self: center;
+}
+.MainGroup h1{
+    font-size: 64px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+
+}
+.MainGroup h2{
+    justify-self: right;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    text-align: right;
+    margin-top: 36px;
+
+}
+.MainGroup p{
+    font-size: 24px;
+    font-weight: 400;
+    text-align: right;
+    margin: 0;
+    padding: 0;
+    margin-top: 5px;
+
+}
+.MainGroup h5{
+    font-size: 24px;
+    font-weight: 600;
+    text-align: right;
+    margin: 0;
+    padding: 0;
+    color: white;
+    text-decoration: underline;
+    margin-top: 16px;
+}
+.MainGroup h6{
+    font-size: 24px;
+    font-weight: 600;
+    text-align: right;
+    margin: 0;
+    padding: 0;
+    color: white;
+    margin-top: 36px;
+
+}
+.Gamepage1{
+    display: flex;
+    flex-direction: column;
+    background-image: url('../public/images/backgroundGame.png');
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    background-size: cover;       
+    background-repeat: no-repeat; 
+    background-position: center;
+    justify-content:center;
+}
+.divButtons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    align-self: center;
+}
+.backButton{
+    height: 48px;
+  border-radius: 0px;
+  box-shadow: none;
+  font-size: 20px;
+  font-family: 'Assistant', sans-serif;
+  border-style: none;
+  background-color: transparent;
+  color: white;
+  text-decoration: underline;
+
+}

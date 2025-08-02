@@ -6,7 +6,7 @@ function MainCard(){
   const navigate = useNavigate();
 
   const GoToGame = () => {
-    navigate('/game');
+    navigate('/teacher_tips');
   };
 
 

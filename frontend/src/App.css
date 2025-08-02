@@ -60,6 +60,7 @@ button {
   padding: 8px 24px;
   height: 48px;
   align-self: center;
+  cursor: pointer;
 }
 .group-A {
   width: 100%;
