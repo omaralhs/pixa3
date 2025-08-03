@@ -279,3 +279,106 @@ input:focus {
   text-decoration: underline;
 
 }
+
+.choosenimages{
+    width: 22%;
+    height: 90%;
+    background-color: #4d1989;
+    border-radius: 8px;
+    border: #ffffff33 solid 2px;
+    padding: 24px;
+    overflow-y: auto;   /* enable vertical scroll when content overflows */
+}
+.choosenimages2{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: #4d1989;
+    border-radius: 8px;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.allimages {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    padding: 16px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+
+.allimagesContainer {
+    width: 70%;
+    height: 100%; /* ← this is good */
+    background-color: #4d1989;
+    border-radius: 8px;
+    border: #ffffff33 solid 2px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* ensures scrollable content stays inside */
+}
+
+
+.allimagesContainer h1{
+    text-align: right;
+    
+}
+
+.MainGroupimages{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 70%;
+    height: 70%;
+    justify-self: center;
+    align-self: center;
+}
+.image-item {
+    position: relative;
+    border-radius: 8px;
+    height: 400px; /* example fixed height */
+    overflow: hidden;
+}
+
+.image-item img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* prevents distortion */
+    border-radius: 8px;
+    cursor: pointer;
+
+}
+
+.half{
+    height: 48%;
+}
+.choosenimages{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.icon{
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #ffffff99;
+    border-radius: 8px;
+    padding: 4px;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+.choosenimages h1{
+    text-align: right;
+    color: white;
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+}

@@ -42,6 +42,17 @@ app.post('/GetSubs', (req, res) => {
     });
 });
 
+
+app.get('/getimages', (req, res) => {
+    db.query("SELECT * FROM images", (err, result) => {  
+        if (err) {
+            console.error("Error querying database:", err);
+            res.status(500).json({ error: "Database error" });
+        } else {
+            res.json(result.rows);
+        }
+    })});
+
 app.post('/Save', async (req, res) => {
   let { imageURL, prompt, tip, score, user_name } = req.body;
   score = Number(score); // 🔑 convert to number

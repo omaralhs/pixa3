@@ -17,10 +17,7 @@ export default function Game() {
     setSubs(result);
   }
 
-  // Call this after successful submission to update the list
-  async function handleNewSubmission() {
-    await fetchSubs();
-  }
+
 
   function CreateSubs(sub) {
     return (
