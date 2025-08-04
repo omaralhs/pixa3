@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 export default  function Choose2images() {
+  const navigate = useNavigate();
 
     useEffect(() => {
         fetch('http://localhost:5000/getimages', {
@@ -13,6 +16,25 @@ export default  function Choose2images() {
         .catch(err => console.error(err));
     }, []);
 
+     const GoToGame = () => {
+        fetch('http://localhost:5000/creategame', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                 image1: selectedImages[0]?.id,
+                 image2: selectedImages[1]?.id
+})
+        })
+        .then(() => navigate('/game'))
+        .catch(err => console.error(err));
+    };
+
+    const GoToTips = () => {
+         navigate('/teacher_tips');
+        };
+    
     function addImage(image) {
         // If already 2 images selected, alert and return
         if(selectedImages.includes(image)){
@@ -59,6 +81,12 @@ export default  function Choose2images() {
             </div>
             </div>
         </div>
+
+        <div className="divButtons">
+            <button onClick={GoToTips} className="backButton">back</button>
+            <button onClick={GoToGame}>next</button>
+        </div>
+        
    </div>
   );
 }

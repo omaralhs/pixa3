@@ -31,6 +31,7 @@ db.connect()
 /**
  * GET all submissions
  */
+
 app.post('/GetSubs', (req, res) => {
     db.query("SELECT * FROM submission", (err, result) => {
         if (err) {
@@ -42,6 +43,18 @@ app.post('/GetSubs', (req, res) => {
     });
 });
 
+app.post('/creategame', async (req, res) => {
+    const randomId = Math.floor(10000 + Math.random() * 90000).toString();
+    try {
+    await db.query("INSERT INTO game (id, image_1_id, image_2_id) VALUES ($1, $2, $3)",
+        [randomId, req.body.image1, req.body.image2],)
+        res.status(200).json({ message: 'Game Created successfully' });
+    } catch (err) {
+    console.error('Error saving submission:', err);
+    res.status(500).json({ error: 'Failed to Create a Game' });
+  }        
+
+});
 
 app.get('/getimages', (req, res) => {
     db.query("SELECT * FROM images", (err, result) => {  

@@ -7,8 +7,8 @@ export default function TeacherTips() {
     
   const navigate = useNavigate();
 
-  const GoToGame = () => {
-    navigate('/game');
+  const GoTo2images = () => {
+    navigate('/choose2images');
   };
    const GoToindex = () => {
     navigate('/');
@@ -26,7 +26,7 @@ export default function TeacherTips() {
         </div>
         <div className="divButtons">
             <button onClick={GoToindex} className="backButton">back</button>
-            <button onClick={GoToGame}>next</button>
+            <button onClick={GoTo2images}>next</button>
         </div>
       
     </div>

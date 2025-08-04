@@ -311,7 +311,7 @@ input:focus {
 
 .allimagesContainer {
     width: 70%;
-    height: 100%; /* ← this is good */
+    height: 95%; /* ← this is good */
     background-color: #4d1989;
     border-radius: 8px;
     border: #ffffff33 solid 2px;
