@@ -17,6 +17,7 @@ export default  function Choose2images() {
     }, []);
 
      const GoToGame = () => {
+                const ids="12345"
         fetch('http://localhost:5000/creategame', {
             method: 'POST',
             headers: {
@@ -27,7 +28,7 @@ export default  function Choose2images() {
                  image2: selectedImages[1]?.id
 })
         })
-        .then(() => navigate('/game'))
+        .then(() => navigate(`/game?ids=${ids}`))
         .catch(err => console.error(err));
     };
 

@@ -3,10 +3,11 @@ import '../App.css';
 import '../Game.css';
 import GetSubs from '../hooks/GetSubs';
 import Sub from '../components/Sub';
-
+import { useSearchParams  } from 'react-router-dom';
 export default function Game() {
   const [subs, setSubs] = useState([]);
-
+  const [searchParams ]  =useSearchParams();
+  const gameID=searchParams.get('ids'); // Get ids from URL params
   // Fetch subs once on mount
   useEffect(() => {
     fetchSubs();
@@ -32,7 +33,7 @@ export default function Game() {
 
   return (
     <div className="Gamepage">
-      <h1>pixa</h1>
+      <h1>pixa {gameID}</h1>
       <div className="ImageAndSubs">
         <div className="imagee">
           <img src="./images/robot.png" alt="" />

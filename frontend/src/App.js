@@ -5,6 +5,7 @@ import Game from './Pages/Game';
 import GamePhone from './Pages/GamePhone';
 import TeacherTips from './Pages/teacherTips';
 import Choose2images from './Pages/Choose2images';
+import QrCode from './Pages/QrCode';
 function App() {
   return (
     <Router>
@@ -14,6 +15,7 @@ function App() {
         <Route path="/game_phone" element={<GamePhone />}></Route>
         <Route path="/teacher_tips" element={<TeacherTips />}></Route>
         <Route path="/choose2images" element={<Choose2images />}></Route>
+        <Route path="/qr_code" element={<QrCode />}></Route>
       </Routes>
     </Router>
 
