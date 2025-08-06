@@ -391,7 +391,6 @@ input:focus {
     align-self: center;
     width: 75%;
     height: 80vh;
-    background-image: url('../public/images/backgroundGame.png');
     background-size: cover;       
     background-repeat: no-repeat; 
     background-position: center;
@@ -406,15 +405,68 @@ input:focus {
 .GameCode{
     display: flex;
     flex-direction:  row-reverse;
-    width: 50%;
-    height: 50%;
+    width: 40%;
     border-radius: 8px;
     color: white;
     font-size: 24px;
     text-align: center;
     line-height: 50px; /* vertically center the text */
-    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
 }
 .usejoined{
     height: 50%;
+}
+.image_Wrapper{
+    width: 50%;
+    aspect-ratio: 1 / 1;
+    margin: 0;
+}
+.text-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 50%;
+    height: 90%;
+   font-size: 72px;
+    font-weight: 700;
+    margin: 0px 0; ;
+    padding: 0;
+    align-self: center;
+    justify-self: center;
+}
+.text-wrapper p {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-size:  72px;
+    font-weight: 700;   
+}
+
+.image_Wrapper img{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+.usersjoined{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #4d1989;
+    border: #ffffff33 solid 1px;
+    border-radius: 8px;
+    padding: 24px;
+}
+.usersjoined h1{
+    align-self: flex-end;
+    padding: 0;
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+.qrButtons{
+    width: 75%;
 }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default  function Choose2images() {
   const navigate = useNavigate();
+ 
 
     useEffect(() => {
         fetch('http://localhost:5000/getimages', {
