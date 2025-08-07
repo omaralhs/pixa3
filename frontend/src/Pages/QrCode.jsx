@@ -1,8 +1,19 @@
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function QrCode() {
+   const navigate = useNavigate();
+    const GoToStudentTips = () => {
+        navigate('/student_tips');
+    };
+    const goToChooseimages = () => {
+        navigate('/choose2images');
+    }
+
+
+
   const [qrImageUrl, setQrImageUrl] = useState('');
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -39,8 +50,8 @@ export default function QrCode() {
       </div>
 
       <div className="divButtons qrButtons">
-        <button className="backButton">back</button>
-        <button>next</button>
+        <button onClick={goToChooseimages} className="backButton">back</button>
+        <button onClick={GoToStudentTips}>next</button>
       </div>
     </div>
   );

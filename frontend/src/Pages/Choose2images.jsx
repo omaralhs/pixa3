@@ -18,7 +18,12 @@ export default  function Choose2images() {
     }, []);
 
      const GoToGame = () => {
-                const ids="12345"
+          if(selectedImages.length <= 0)
+            {
+            return alert("Please select 2 images before proceeding");
+            }
+         else{
+                const ids=Math.floor(10000 + Math.random() * 90000).toString();
         fetch('http://localhost:5000/creategame', {
             method: 'POST',
             headers: {
@@ -29,9 +34,9 @@ export default  function Choose2images() {
                  image2: selectedImages[1]?.id
 })
         })
-        .then(() => navigate(`/game?ids=${ids}`))
+        .then(() => navigate(`/qr_code?ids=${ids}`))
         .catch(err => console.error(err));
-    };
+    };}
 
     const GoToTips = () => {
          navigate('/teacher_tips');
