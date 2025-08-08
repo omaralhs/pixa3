@@ -33,14 +33,23 @@ db.connect()
  */
 
 app.post('/GetSubs', (req, res) => {
-    db.query("SELECT * FROM submission", (err, result) => {
-        if (err) {
-            console.error("Error querying database:", err);
-            res.status(500).json({ error: "Database error" });
-        } else {
+    const { game_id } = req.body; // Extract game_id from the body
+
+    if (!game_id) {
+        return res.status(400).json({ error: "Missing game_id" });
+    }
+
+    db.query(
+        'SELECT * FROM submission WHERE game_id = $1',
+        [game_id],
+        (err, result) => {
+            if (err) {
+                console.error("Error querying database:", err);
+                return res.status(500).json({ error: "Database error" });
+            }
             res.json(result.rows);
         }
-    });
+    );
 });
 
 app.post('/creategame', async (req, res) => {
@@ -67,13 +76,13 @@ app.get('/getimages', (req, res) => {
     })});
 
 app.post('/Save', async (req, res) => {
-  let { imageURL, prompt, tip, score, user_name } = req.body;
+  let { imageURL, prompt, tip, score, user_name, game_id } = req.body;
   score = Number(score); // 🔑 convert to number
-
+    console.log("Received data:", { imageURL, prompt, tip, score, user_name, game_id });
   try {
     await db.query(
-      'INSERT INTO submission (image_url, prompt, tip, score, user_name) VALUES ($1, $2, $3, $4, $5)',
-      [imageURL, prompt, tip, score, user_name]
+      'INSERT INTO submission (image_url, prompt, tip, score, user_name,game_id) VALUES ($1, $2, $3, $4, $5, $6)',
+      [imageURL, prompt, tip, score, user_name, game_id]
     );
     res.status(200).json({ message: 'Submission saved successfully' });
   } catch (err) {

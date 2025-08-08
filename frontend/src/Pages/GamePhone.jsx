@@ -5,11 +5,14 @@ import useImageGenerator from '../hooks/useImageGenerator';
 import SaveSub from '../hooks/SaveSub';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSearchParams } from 'react-router-dom';
 
 // Call this on success:
 function GamePhone() {
   const { prompt, setPrompt, imageURL, loading, handleGenerate } = useImageGenerator();
-  
+  const [searchParams] = useSearchParams();
+  const Gameid = searchParams.get('ids'); // Gets the value of the `id` parameter
+
 
 
 
@@ -40,7 +43,7 @@ function GamePhone() {
           </div>
         </div>
       </div>
-      <button onClick={()=>SaveSub(prompt,imageURL,"RAN M","GOOD PROMPT MY BOY","77")}>submit</button>
+      <button onClick={()=>SaveSub(prompt,imageURL,"RAN M","GOOD PROMPT MY BOY","77",Gameid)}>submit</button>
       {loading && <p>טוען תמונה...</p>}
     </div>
   );

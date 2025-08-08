@@ -14,7 +14,7 @@ export default function Game() {
   }, []);
 
   async function fetchSubs() {
-    const result = await GetSubs();
+    const result = await GetSubs(gameID);
     setSubs(result);
   }
 
