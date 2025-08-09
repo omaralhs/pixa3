@@ -7,6 +7,7 @@ import TeacherTips from './Pages/teacherTips';
 import Choose2images from './Pages/Choose2images';
 import QrCode from './Pages/QrCode';
 import StudentTips from './Pages/StudentTips';
+import JoinGame from './Pages/JoinGame';
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/choose2images" element={<Choose2images />}></Route>
         <Route path="/qr_code" element={<QrCode />}></Route>
         <Route path="/student_tips" element={<StudentTips />}></Route>
+        <Route path="/join_game" element={<JoinGame />}></Route>
       </Routes>
     </Router>
 

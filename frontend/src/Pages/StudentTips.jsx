@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-
-
+import { useLocation } from 'react-router-dom';
 
 export default function StudentTips() {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const gameId = searchParams.get("ids");
     const navigate = useNavigate();
     const GoToGame = () => {
-        navigate('/game');
+        navigate('/game?ids=' + gameId);
     };
     const goToQrCode = () => {
         navigate('/qr_code');

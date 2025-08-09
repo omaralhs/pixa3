@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export default function QrCode() {
    const navigate = useNavigate();
     const GoToStudentTips = () => {
-        navigate('/student_tips');
+        navigate('/student_tips?ids=' + gameId);
     };
     const goToChooseimages = () => {
         navigate('/choose2images');

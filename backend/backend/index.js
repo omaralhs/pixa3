@@ -4,13 +4,14 @@ import cors from 'cors';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
+import cookieParser from "cookie-parser";
 
 dotenv.config(); // Load RUNWARE_API_KEY from .env
 
 const app = express();
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json()); // Parse JSON bodies
-console.log("Runware API key:", process.env.RUNWARE_API_KEY);
 
 // PostgreSQL setup
 const db = new pg.Client({
@@ -21,6 +22,27 @@ const db = new pg.Client({
     port: 5432,
 });
 
+app.use(async (req, res, next) => {
+  if (!req.cookies.user_id) {
+    // Create new anonymous user
+    const result = await db.query(
+      "INSERT INTO users (firstname, avatar) VALUES (NULL, NULL) RETURNING id"
+    );
+    const userId = result.rows[0].id;
+
+    // Save in cookie so we know them next time
+    res.cookie("user_id", userId, { httpOnly: true });
+    req.userId = userId;
+  } else {
+    req.userId = req.cookies.user_id;
+  }
+  next();
+});
+
+app.get("/joining_game", async (req, res) => {
+  const user = await db.query("SELECT * FROM users WHERE id = $1", [req.userId]);
+  res.json(user.rows[0]);
+});
 
 
 
@@ -53,10 +75,9 @@ app.post('/GetSubs', (req, res) => {
 });
 
 app.post('/creategame', async (req, res) => {
-    const randomId = Math.floor(10000 + Math.random() * 90000).toString();
     try {
     await db.query("INSERT INTO game (id, image_1_id, image_2_id) VALUES ($1, $2, $3)",
-        [randomId, req.body.image1, req.body.image2],)
+        [req.body.ids, req.body.image1, req.body.image2],)
         res.status(200).json({ message: 'Game Created successfully' });
     } catch (err) {
     console.error('Error saving submission:', err);

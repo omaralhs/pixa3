@@ -31,8 +31,9 @@ export default  function Choose2images() {
             },
             body: JSON.stringify({
                  image1: selectedImages[0]?.id,
-                 image2: selectedImages[1]?.id
-})
+                 image2: selectedImages[1]?.id,
+                 ids:ids
+,})
         })
         .then(() => navigate(`/qr_code?ids=${ids}`))
         .catch(err => console.error(err));

@@ -534,3 +534,16 @@ input:focus {
     text-align: right;
     padding: 0;
 }
+.JoingameContent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    height: 50%;
+    border-radius: 8px;
+    padding: 24px;
+    justify-content: space-around;
+    background-color: #4d1989;
+    align-self: center;
+    justify-self: center;
+}
