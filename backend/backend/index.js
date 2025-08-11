@@ -10,7 +10,10 @@ dotenv.config(); // Load RUNWARE_API_KEY from .env
 
 const app = express();
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // your frontend URL
+  credentials: true
+}));
 app.use(express.json()); // Parse JSON bodies
 
 // PostgreSQL setup
@@ -21,6 +24,9 @@ const db = new pg.Client({
     password: "9988",
     port: 5432,
 });
+db.connect()
+  .then(() => console.log("Connected to PostgreSQL"))
+  .catch(err => console.error("Database connection error:", err));
 
 app.use(async (req, res, next) => {
   if (!req.cookies.user_id) {
@@ -39,6 +45,75 @@ app.use(async (req, res, next) => {
   next();
 });
 
+app.post('/inserUser', async (req, res) => {
+  const { name, image } = req.body;
+  try {
+    // Check if user exists
+    const userResult = await db.query(
+      "SELECT * FROM users WHERE id = $1",
+      [req.userId]
+    );
+
+    if (userResult.rows.length > 0) {
+      // User exists, update name and image
+      await db.query(
+        "UPDATE users SET firstname = $1, avatar = $2 WHERE id = $3",
+        [name, image, req.userId]
+      );
+      res.status(200).json({ message: 'User updated successfully' });
+    } else {
+      // User does not exist, insert new user
+      await db.query(
+        "INSERT INTO users (id, firstname, avatar) VALUES ($1, $2, $3)",
+        [req.userId, name, image]
+      );
+      res.status(200).json({ message: 'User inserted successfully' });
+    }
+  } catch (err) {
+    console.error('Error inserting/updating user:', err);
+    res.status(500).json({ error: 'Failed to insert/update user' });
+  }
+});
+
+app.post('/join_game', async (req, res) => {
+  const { otp } = req.body;
+  try {
+    // Check if game exists
+    const gameResult = await db.query(
+      "SELECT * FROM game WHERE id = $1"
+      , [otp]
+    );
+    if (gameResult.rows.length === 0) {
+      return res.status(404).json({ error: "Game not found" });
+    }
+    else{
+      return res.status(200).json({ message: "Game found" });
+    }
+  } catch (err) {
+    console.error('Error joining game:', err);
+    res.status(500).json({ error: 'Failed to join game' });
+  }
+});
+
+app.get('/getUser', async (req, res) => {
+  console.log("Fetching user data for ID:", req.userId);
+  try {
+    const userResult = await db.query(
+      "SELECT firstname, avatar FROM users WHERE id = $1",
+      [req.userId]
+    );
+    if (userResult.rows.length > 0) {
+      res.json(userResult.rows[0]);
+      console.log("User data:", userResult.rows[0]);
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (err) {
+    console.error('Error fetching user data:', err);
+    res.status(500).json({ error: 'Failed to fetch user data' });
+  }
+});
+
 app.get("/joining_game", async (req, res) => {
   const user = await db.query("SELECT * FROM users WHERE id = $1", [req.userId]);
   res.json(user.rows[0]);
@@ -46,9 +121,7 @@ app.get("/joining_game", async (req, res) => {
 
 
 
-db.connect()
-  .then(() => console.log("Connected to PostgreSQL"))
-  .catch(err => console.error("Database connection error:", err));
+
 
 /**
  * GET all submissions
