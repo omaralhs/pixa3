@@ -10,14 +10,12 @@ export default function Game() {
   const gameID=searchParams.get('ids'); // Get ids from URL params
   // Fetch subs once on mount
   useEffect(() => {
-    fetchSubs();
-  }, []);
-
   async function fetchSubs() {
     const result = await GetSubs(gameID);
     setSubs(result);
   }
-
+  fetchSubs();
+}, [gameID]);
 
 
   function CreateSubs(sub) {

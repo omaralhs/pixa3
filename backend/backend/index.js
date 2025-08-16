@@ -5,10 +5,31 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
-
+import { Server } from "socket.io";
+import { createServer } from "http";
 dotenv.config(); // Load RUNWARE_API_KEY from .env
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
+
+app.set("io", io);
+
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  // Join a game room
+  socket.on("joinGame", (gameId) => {
+    socket.join(gameId);
+    console.log(`User joined game room ${gameId}`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
+
+
 app.use(cookieParser());
 app.use(cors({
   origin: 'http://localhost:3000', // your frontend URL
@@ -30,19 +51,115 @@ db.connect()
 
 app.use(async (req, res, next) => {
   if (!req.cookies.user_id) {
-    // Create new anonymous user
-    const result = await db.query(
-      "INSERT INTO users (firstname, avatar) VALUES (NULL, NULL) RETURNING id"
-    );
-    const userId = result.rows[0].id;
-
-    // Save in cookie so we know them next time
-    res.cookie("user_id", userId, { httpOnly: true });
-    req.userId = userId;
+    try {
+      // Use empty strings instead of NULL to avoid DB errors
+      const result = await db.query(
+        "INSERT INTO users (firstname, avatar) VALUES ($1, $2) RETURNING id",
+        ['', '']
+      );
+      if (!result.rows[0]) {
+        throw new Error("Failed to create user");
+      }
+      const userId = result.rows[0].id;
+      res.cookie("user_id", userId, { httpOnly: true });
+      req.userId = userId;
+    } catch (err) {
+      console.error("Error creating user:", err);
+      return res.status(500).json({ error: "Failed to create user" });
+    }
   } else {
     req.userId = req.cookies.user_id;
   }
   next();
+});
+
+app.post('/start_game', async (req, res) => {
+  const { game_id } = req.body;
+
+  try {
+    // Check if the game exists
+    const gameResult = await db.query(
+      "SELECT * FROM game WHERE id = $1",
+      [game_id]
+    );
+
+    if (gameResult.rows.length === 0) {
+      return res.status(404).json({ error: "Game not found" });
+    }
+
+    // Update 'started' to true
+    await db.query(
+      "UPDATE game SET started = true WHERE id = $1",
+      [game_id]
+    );
+
+    // Notify all clients in this game room
+    io.to(game_id).emit("started");
+
+    res.status(200).json({ message: "Game started" });
+
+  } catch (err) {
+    console.error('Error starting game:', err);
+    res.status(500).json({ error: 'Failed to start game' });
+  }
+});
+
+app.get('/check_game_started', async (req, res) => {
+  const { game_id } = req.query;
+  try {
+    const result = await db.query(
+      "SELECT started FROM game WHERE id = $1",
+      [game_id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Game not found" });
+    }
+
+    res.json({ started: result.rows[0].started });
+
+  } catch (err) {
+    console.error('Error checking game status:', err);
+    res.status(500).json({ error: 'Failed to check game status' });
+  }
+});
+
+app.post("/chat",
+  async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini", // or another GPT model
+        messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          { role: "user", content: message },
+        ],
+      }),
+    });
+
+    const data = await response.json();
+if (
+  !data.choices ||
+  !Array.isArray(data.choices) ||
+  !data.choices[0] ||
+  !data.choices[0].message ||
+  !data.choices[0].message.content
+) {
+  console.error("Unexpected OpenAI response:", data);
+  return res.status(500).json({ error: "Invalid response from OpenAI" });
+}
+res.json({ reply: data.choices[0].message.content });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
 });
 
 app.post('/inserUser', async (req, res) => {
@@ -234,6 +351,6 @@ app.post('/gen', async (req, res) => {
 });
 
 // Start server
-app.listen(5000, () => {
-    console.log("Server is listening on port 5000");
+server.listen(5000, () => {
+  console.log("Server with Socket.IO is listening on port 5000");
 });

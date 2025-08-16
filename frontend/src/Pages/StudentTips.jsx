@@ -7,6 +7,14 @@ export default function StudentTips() {
     const gameId = searchParams.get("ids");
     const navigate = useNavigate();
     const GoToGame = () => {
+        fetch('http://localhost:5000/start_game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ game_id: gameId }),
+            credentials: 'include' // Include cookies in the request
+        })
         navigate('/game?ids=' + gameId);
     };
     const goToQrCode = () => {
