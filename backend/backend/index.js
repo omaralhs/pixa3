@@ -18,17 +18,22 @@ app.set("io", io);
 io.on("connection", (socket) => {
   console.log("A user connected");
 
-  // Join a game room
+  // 👉 Join a game room (used for things like "started")
   socket.on("joinGame", (gameId) => {
     socket.join(gameId);
     console.log(`User joined game room ${gameId}`);
+  });
+
+  // 👉 Wait for subs updates in a game
+  socket.on("waiting_for_subs", (gameId) => {
+    socket.join(gameId);
+    console.log(`User is waiting for subs in game ${gameId}`);
   });
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
 });
-
 
 app.use(cookieParser());
 app.use(cors({
@@ -289,12 +294,18 @@ app.get('/getimages', (req, res) => {
 app.post('/Save', async (req, res) => {
   let { imageURL, prompt, tip, score, user_name, game_id } = req.body;
   score = Number(score); // 🔑 convert to number
-    console.log("Received data:", { imageURL, prompt, tip, score, user_name, game_id });
+
+  console.log("Received data:", { imageURL, prompt, tip, score, user_name, game_id });
+
   try {
     await db.query(
-      'INSERT INTO submission (image_url, prompt, tip, score, user_name,game_id) VALUES ($1, $2, $3, $4, $5, $6)',
+      'INSERT INTO submission (image_url, prompt, tip, score, user_name, game_id) VALUES ($1, $2, $3, $4, $5, $6)',
       [imageURL, prompt, tip, score, user_name, game_id]
     );
+
+    // ✅ Notify all clients in this game room who are waiting for subs
+    io.to(game_id).emit("subs_updated");
+
     res.status(200).json({ message: 'Submission saved successfully' });
   } catch (err) {
     console.error('Error saving submission:', err);
