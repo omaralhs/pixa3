@@ -313,6 +313,20 @@ app.post('/Save', async (req, res) => {
   }
 });
 
+app.get("/gameusers", async (req, res) => {
+  const gameId = req.query.ids; // e.g. 12345
+  const result = await db.query(
+    `SELECT u.* 
+     FROM users u
+     JOIN game_users gu ON u.id = gu.user_id
+     WHERE gu.game_id = $1`,
+    [gameId]
+  );
+  console.log("Fetched users for game:", gameId, result.rows);
+  res.json(result.rows);
+});
+
+
 /**
  * POST /gen - Generate an image using Runware
  */
