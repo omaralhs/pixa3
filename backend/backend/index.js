@@ -291,27 +291,62 @@ app.get('/getimages', (req, res) => {
         }
     })});
 
+
+    
+app.get('/gettrys', async (req, res) => {
+  const gameid = req.query.gameid;
+  const userId = req.userId; // 🔑 pass userId in query
+
+  try {
+    const result = await db.query(
+      "SELECT COUNT(*) FROM submission WHERE game_id = $1 AND user_id = $2",
+      [gameid, userId]
+    );
+
+    const trys = parseInt(result.rows[0].count, 10);
+    res.json({ trys });
+  } catch (err) {
+    console.error('Error fetching trys:', err);
+    res.status(500).json({ error: 'Failed to fetch trys' });
+  }
+});
+
+
+
 app.post('/Save', async (req, res) => {
+  const userId =  req.userId; // 🔑 pass userId in query
   let { imageURL, prompt, tip, score, user_name, game_id } = req.body;
   score = Number(score); // 🔑 convert to number
 
-  console.log("Received data:", { imageURL, prompt, tip, score, user_name, game_id });
-
   try {
+    // Await the select query
+   const result = await db.query(
+      "SELECT COUNT(*) FROM submission WHERE game_id = $1 AND user_id = $2",
+      [game_id, userId]
+    );
+    console.log("gameid:", game_id, "userId:", userId, "Count result:", result.rows);
+
+    console.log("result"+ result.rows)
+    let trys = result.rows[0].count == 0 ? 1 : 2;
+    console.log("result rows:", result.rows);
+    console.log("Received data:", { imageURL, prompt, tip, score, user_name, game_id, trys, userId });
+
     await db.query(
-      'INSERT INTO submission (image_url, prompt, tip, score, user_name, game_id) VALUES ($1, $2, $3, $4, $5, $6)',
-      [imageURL, prompt, tip, score, user_name, game_id]
+      'INSERT INTO submission (image_url, prompt, tip, score, user_name, game_id, trys, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+      [imageURL, prompt, tip, score, user_name, game_id, trys, req.userId]
     );
 
     // ✅ Notify all clients in this game room who are waiting for subs
     io.to(game_id).emit("subs_updated");
 
-    res.status(200).json({ message: 'Submission saved successfully' });
+    res.status(200).json({ message: 'Submission saved successfully', numberOfTrys: trys });
   } catch (err) {
     console.error('Error saving submission:', err);
     res.status(500).json({ error: 'Failed to save submission' });
   }
 });
+
+
 
 app.get("/gameusers", async (req, res) => {
   const gameId = req.query.ids; // e.g. 12345

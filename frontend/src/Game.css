@@ -400,7 +400,6 @@ input:focus {
     width: 50%;
     height: 50%;
     border-radius: 8px;
-    margin-bottom: 20px;
 }
 .GameCode{
     display: flex;
@@ -466,6 +465,8 @@ input:focus {
     margin: 0;
     font-size: 24px;
     font-weight: 600;
+    align-self: center;
+
 }
 .qrButtons{
     width: 75%;
@@ -682,16 +683,26 @@ p{
     margin: 0;
     padding: 0;
 }
-.ListOfUsers{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto; /* enable vertical scroll when content overflows */
-    padding: 16px;
-    font-size: 24px;
-    font-weight: 600;
+.ListOfUsers {
+  display: flex;
+  flex-wrap: wrap;      /* ✅ allows wrapping to next row */
+  gap: 16px;            /* spacing between users */
+  margin-top: 16px;
+  padding: 16px;
+  font-size: 24px;
+  font-weight: 600;
+}
 
+
+.ListOfUsers > * {
+  display: inline-flex;    /* keeps content inline */
+  align-items: center;     /* centers vertically */
+  padding: 8px 12px;       /* space around text */
+  border: 1px solid white; /* your border */
+  border-radius: 8px;
+  white-space: nowrap;     /* prevent text breaking into 2 lines */
+}
+
+.hide{
+    display: none;
 }

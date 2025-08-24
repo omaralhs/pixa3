@@ -434,7 +434,6 @@ padding-bottom: 10px;
   gap: 30px;
 }
 .userCard{
-  width: 200px;
   height: 50px;
   background-color: #ffffff3b;
   border-radius: 8px;
@@ -444,12 +443,20 @@ padding-bottom: 10px;
   justify-content: center;
   gap: 16px;
   border: #FFFFFF solid 1px;
+  word-break: break-word;
 }
 .userCard img{
   margin: 0;
   padding: 0;
 }
-img{
+.userCard h1{
+  margin: 0;
+  padding: 0;
+}
+.userCard img{
    margin: 0;
+   padding: 0;
 
 }
+
+
