@@ -8,15 +8,22 @@ import { io } from 'socket.io-client';
 
 export default function Game() {
   const [subs, setSubs] = useState([]);
+  const [images, setImages] = useState([]); // store image objects {id, url}
+  const [imageNumber, setImageNumber] = useState(1); // starts at 1
   const [searchParams] = useSearchParams();
-  const gameID = searchParams.get('ids'); // Get ids from URL params
+  const gameID = searchParams.get('ids'); // get game id from URL
 
+  // Navigate to scoreboard
+  function GoToScoreboard() {
+    window.location.href = `/scoreboard?ids=${gameID}`;
+  }
+
+  // Socket.io for live subs updates
   useEffect(() => {
-    const socket = io("http://localhost:5000"); // <-- your backend
+    const socket = io("http://localhost:5000");
 
     socket.emit("waiting_for_subs", gameID);
 
-    // Listen for updates from backend
     socket.on("subs_updated", async () => {
       const result = await GetSubs(gameID);
       setSubs(result);
@@ -27,7 +34,7 @@ export default function Game() {
     };
   }, [gameID]);
 
-  // Initial fetch
+  // Initial fetch of subs
   useEffect(() => {
     async function fetchSubs() {
       const result = await GetSubs(gameID);
@@ -36,10 +43,27 @@ export default function Game() {
     fetchSubs();
   }, [gameID]);
 
+  // Fetch images for the game
+  useEffect(() => {
+    async function fetchImages() {
+      try {
+        const res = await fetch(`http://localhost:5000/game-images?gameID=${gameID}`);
+        const data = await res.json();
+        setImages(data.images); // [{id, url}, ...]
+        console.log("Fetched images:", data.images); // ← see the array in console
+
+      } catch (err) {
+        console.error("Failed to fetch images:", err);
+      }
+    }
+    fetchImages();
+  }, [gameID]);
+
+  // Render each subscriber
   function CreateSubs(sub) {
     return (
       <Sub
-        key={sub.user_name}
+        key={sub.id}
         name={sub.user_name}
         score={sub.score}
         url={sub.image_url}
@@ -49,17 +73,32 @@ export default function Game() {
 
   return (
     <div className="Gamepage">
-      <h1>pixa {gameID}</h1>
+      <h1>pixa </h1>
+
       <div className="ImageAndSubs">
         <div className="imagee">
-          <img src="./images/robot.png" alt="" />
+          {images.length > 0 ? (
+            <img src={images[imageNumber - 1].url} alt={`robot pic ${imageNumber}`} />
+          ) : (
+            <p>Loading images...</p>
+          )}
         </div>
 
-        <div className="subs">{subs.map(CreateSubs)}</div>
+        <div className="subs">
+          {subs.map(CreateSubs)}
+        </div>
       </div>
 
       <div className="buttons">
-        <button>לתמונה הבאה</button>
+        <button
+          onClick={
+            imageNumber >= images.length
+              ? GoToScoreboard
+              : () => setImageNumber(prev => prev + 1)
+          }
+        >
+          לתמונה הבאה
+        </button>
       </div>
     </div>
   );

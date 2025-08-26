@@ -346,7 +346,81 @@ app.post('/Save', async (req, res) => {
   }
 });
 
+app.get("/image-number", async (req, res) => {
+  const gameID = req.query.gameID; // get from ?gameID=123
+  if (!gameID) return res.status(400).json({ error: "gameID is required" });
 
+  try {
+    const result = await db.query(
+      "SELECT current_image FROM game WHERE id = $1 LIMIT 1",
+      [gameID]
+    );
+
+    if (result.rows.length === 0)
+      return res.status(404).json({ error: "Game not found" });
+
+    res.json({ image_number: result.rows[0].current_image });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/next-image", async (req, res) => {
+  const gameID = req.query.gameID; // get from ?gameID=123
+  if (!gameID) return res.status(400).json({ error: "gameID is required" });
+
+  try {
+    const result = await db.query(
+      `UPDATE game
+       SET current_image = current_image + 1
+       WHERE id = $1
+       RETURNING current_image`,
+      [gameID]
+    );
+
+    if (result.rows.length === 0)
+      return res.status(404).json({ error: "Game not found" });
+
+    res.json({ image_number: result.rows[0].current_image });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+// ========================
+// Get all images for a game
+// ========================
+app.get("/game-images", async (req, res) => {
+  const gameID = req.query.gameID;
+  if (!gameID) return res.status(400).json({ error: "gameID is required" });
+
+  try {
+    // 1️⃣ Get the game row with image IDs
+    const gameResult = await db.query(
+      "SELECT image_1_id, image_2_id FROM game WHERE id = $1 LIMIT 1",
+      [gameID]
+    );
+
+    if (gameResult.rows.length === 0)
+      return res.status(404).json({ error: "Game not found" });
+
+    const { image_1_id, image_2_id } = gameResult.rows[0];
+
+    // 2️⃣ Fetch the actual image info from images table
+    const imagesResult = await db.query(
+      "SELECT id, url FROM images WHERE id = ANY($1::int[])",
+      [[image_1_id, image_2_id]] // array of image IDs
+    );
+
+    res.json({ images: imagesResult.rows }); // [{id, url}, ...]
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 app.get("/gameusers", async (req, res) => {
   const gameId = req.query.ids; // e.g. 12345

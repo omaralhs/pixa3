@@ -2,7 +2,6 @@ import '../Game.css';
 import '../App.css';
 import Tip from '../components/Tip';
 import useImageGenerator from '../hooks/useImageGenerator';
-import SaveSub from '../hooks/SaveSub';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSearchParams } from 'react-router-dom';
@@ -10,10 +9,11 @@ import { useEffect, useState } from 'react';
 
 // Call this on success:
 function GamePhone() {
-  const { prompt, setPrompt, imageURL, loading, handleGenerate } = useImageGenerator();
   const [searchParams] = useSearchParams();
   const Gameid = searchParams.get('ids'); // Gets the value of the `id` parameter
   const [trys,setTrys]=useState(0);
+  const { prompt, setPrompt, imageURL, loading, handleGenerate } = useImageGenerator(Gameid, setTrys);
+
 
    useEffect(() => {
   const fetchData = async () => {
@@ -64,7 +64,6 @@ function GamePhone() {
           </div>
         </div>
       </div>
-      <button   disabled={trys === 2} id='submitbt' className='submitbtn' onClick={()=>SaveSub(prompt,imageURL,"RAN M","GOOD PROMPT MY BOY","77",Gameid , setTrys)}>submit</button>
       {loading && <p>טוען תמונה...</p>}
     </div>
   );

@@ -10,6 +10,7 @@ import StudentTips from './Pages/StudentTips';
 import JoinGame from './Pages/JoinGame';
 import Signin from './Pages/Signin'; 
 import Waiting from './Pages/waiting';
+import ScoreBoard from './Pages/ScoreBoard';
 function App() {
   return (
     <Router>
@@ -24,6 +25,7 @@ function App() {
         <Route path="/join_game" element={<JoinGame />}></Route>
         <Route path="/signin" element={<Signin />}></Route>
         <Route path="/waiting" element={<Waiting />}></Route>
+        <Route path="/scoreboard" element={<ScoreBoard />}></Route>
       </Routes>
     </Router>
 
