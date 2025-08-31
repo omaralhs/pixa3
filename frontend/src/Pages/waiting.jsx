@@ -14,7 +14,9 @@ export default function Waiting() {
 
     const checkGameStarted = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/check_game_started?game_id=${gameId}`);
+        const res = await fetch(`http://localhost:5000/check_game_started?game_id=${gameId}`,{
+          credentials: 'include',
+        });
         const data = await res.json();
 
         if (data.started) {
@@ -32,7 +34,9 @@ export default function Waiting() {
   useEffect(() => {
     if (!gameId) return;
 
-    const socket = io("http://localhost:5000");
+    const socket = io("http://localhost:5000",{
+      credentials: 'include',
+    });
 
     socket.emit("joinGame", gameId);
 

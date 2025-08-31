@@ -476,6 +476,11 @@ app.post('/gen', async (req, res) => {
             return res.status(500).json({ error: "No image returned from Runware" });
         }
 
+        let name = await db.query("SELECT firstname FROM users WHERE id = $1", [req.userId]);
+        console.log("the user name is ***************************************** :"+name.rows[0].firstname)
+
+
+        // Return the image URL
         res.json({ imageURL });
 
     } catch (err) {

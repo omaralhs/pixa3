@@ -47,7 +47,10 @@ export default function Game() {
   useEffect(() => {
     async function fetchImages() {
       try {
-        const res = await fetch(`http://localhost:5000/game-images?gameID=${gameID}`);
+        const res = await fetch(`http://localhost:5000/game-images?gameID=${gameID}`,
+          {     credentials: 'include',
+          }
+        );
         const data = await res.json();
         setImages(data.images); // [{id, url}, ...]
         console.log("Fetched images:", data.images); // ← see the array in console

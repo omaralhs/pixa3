@@ -8,6 +8,7 @@ export default function StudentTips() {
     const navigate = useNavigate();
     const GoToGame = () => {
         fetch('http://localhost:5000/start_game', {
+            credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

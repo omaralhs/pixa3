@@ -7,6 +7,7 @@ export default  function Choose2images() {
 
     useEffect(() => {
         fetch('http://localhost:5000/getimages', {
+            credentials: 'include',
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,6 +26,7 @@ export default  function Choose2images() {
          else{
                 const ids=Math.floor(10000 + Math.random() * 90000).toString();
         fetch('http://localhost:5000/creategame', {
+            credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

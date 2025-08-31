@@ -33,7 +33,9 @@ useEffect(() => {
   if (gameId) {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/gameusers?ids=${gameId}`);
+        const response = await fetch(`http://localhost:5000/gameusers?ids=${gameId}`,{    
+          credentials: 'include',
+});
         const userData = await response.json();
         setUsers(userData);
         setLoading(false);
