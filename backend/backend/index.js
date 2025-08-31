@@ -30,6 +30,13 @@ io.on("connection", (socket) => {
     console.log(`User is waiting for subs in game ${gameId}`);
   });
 
+   // New event from client to broadcast when a user joins
+  socket.on("waiting_for_users", (gameId) => {
+    socket.join(gameId);
+    console.log(` game: ${gameId} - waiting for users to join it game`);
+
+  });
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
@@ -167,35 +174,86 @@ res.json({ reply: data.choices[0].message.content });
   }
 });
 
+ async function complete (prompt) {
+   try {
+    const { message } = prompt;
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini", // or another GPT model
+        messages: [
+          { role: "system", content: process.env.GptPrompt },
+          { role: "user", content: process.env.userPrompt.replace("{user prompt }", message) },
+        ],
+      }),
+    });
+
+    const data = await response.json();
+if (
+  !data.choices ||
+  !Array.isArray(data.choices) ||
+  !data.choices[0] ||
+  !data.choices[0].message ||
+  !data.choices[0].message.content
+) {
+  console.error("Unexpected OpenAI response:", data);
+}
+    return data.choices[0].message.content;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 app.post('/inserUser', async (req, res) => {
-  const { name, image } = req.body;
+  const { name, image, gameId } = req.body; // <-- receive gameId from frontend
+  console.log("Inserting/Updating user: &*&*&*&*&&*&*", { name, image, gameId, userId: req.userId });
+  if (!gameId) {
+    return res.status(400).json({ error: "gameId is required" });
+  }
   try {
-    // Check if user exists
-    const userResult = await db.query(
-      "SELECT * FROM users WHERE id = $1",
-      [req.userId]
+    const seed = name || req.userId;
+    const avatarUrl = image || `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(seed)}`;
+
+    const userResult = await db.query("SELECT * FROM users WHERE id = $1", [req.userId]);
+
+   if (userResult.rows.length > 0) {
+  await db.query(
+    "UPDATE users SET firstname = $1, avatar = $2, current_game = $3 WHERE id = $4",
+    [name, avatarUrl, gameId, req.userId]
+  );
+} else {
+  await db.query(
+    "INSERT INTO users (id, firstname, avatar, current_game) VALUES ($1, $2, $3, $4)",
+    [req.userId, name, avatarUrl , gameId]
+  );
+}
+
+
+    // Fetch updated users for the game
+    const updatedUsersResult = await db.query(
+      `SELECT u.* 
+       FROM users u
+       JOIN game_users gu ON u.id = gu.user_id
+       WHERE gu.game_id = $1`,
+      [gameId]
     );
 
-    if (userResult.rows.length > 0) {
-      // User exists, update name and image
-      await db.query(
-        "UPDATE users SET firstname = $1, avatar = $2 WHERE id = $3",
-        [name, image, req.userId]
-      );
-      res.status(200).json({ message: 'User updated successfully' });
-    } else {
-      // User does not exist, insert new user
-      await db.query(
-        "INSERT INTO users (id, firstname, avatar) VALUES ($1, $2, $3)",
-        [req.userId, name, image]
-      );
-      res.status(200).json({ message: 'User inserted successfully' });
-    }
+    io.to(gameId).emit('userJoined');
+
+    res.status(200).json({ message: 'User inserted/updated successfully', avatarUrl });
+
   } catch (err) {
     console.error('Error inserting/updating user:', err);
     res.status(500).json({ error: 'Failed to insert/update user' });
   }
 });
+
 
 app.post('/join_game', async (req, res) => {
   const { otp } = req.body;
@@ -312,12 +370,16 @@ app.get('/gettrys', async (req, res) => {
 });
 
 
-
 app.post('/Save', async (req, res) => {
   const userId =  req.userId; // 🔑 pass userId in query
   let { imageURL, prompt, tip, score, user_name, game_id } = req.body;
   score = Number(score); // 🔑 convert to number
 
+  let feedbackRow = await complete(prompt);
+  let feedback = JSON.parse(feedbackRow);
+  tip = feedback.tip;
+  score = feedback.score;
+  console.log("tip from open ai"+tip);
   try {
     // Await the select query
    const result = await db.query(
@@ -331,15 +393,17 @@ app.post('/Save', async (req, res) => {
     console.log("result rows:", result.rows);
     console.log("Received data:", { imageURL, prompt, tip, score, user_name, game_id, trys, userId });
 
+   
     await db.query(
       'INSERT INTO submission (image_url, prompt, tip, score, user_name, game_id, trys, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-      [imageURL, prompt, tip, score, user_name, game_id, trys, req.userId]
+      [imageURL, prompt, tip, score, user_name, game_id, trys, userId]
     );
 
+    
     // ✅ Notify all clients in this game room who are waiting for subs
     io.to(game_id).emit("subs_updated");
 
-    res.status(200).json({ message: 'Submission saved successfully', numberOfTrys: trys });
+    res.status(200).json({ message: 'Submission saved successfully', numberOfTrys: trys, Tip: tip, Score: score });
   } catch (err) {
     console.error('Error saving submission:', err);
     res.status(500).json({ error: 'Failed to save submission' });
@@ -424,15 +488,19 @@ app.get("/game-images", async (req, res) => {
 
 app.get("/gameusers", async (req, res) => {
   const gameId = req.query.ids; // e.g. 12345
-  const result = await db.query(
-    `SELECT u.* 
-     FROM users u
-     JOIN game_users gu ON u.id = gu.user_id
-     WHERE gu.game_id = $1`,
-    [gameId]
-  );
-  console.log("Fetched users for game:", gameId, result.rows);
-  res.json(result.rows);
+  try {
+    const result = await db.query(
+      `SELECT * 
+       FROM users 
+       WHERE current_game = $1`,
+      [gameId]
+    );
+    console.log("Fetched users for game:", gameId, result.rows);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching users for game:", err);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
 });
 
 

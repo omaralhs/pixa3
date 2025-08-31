@@ -10,9 +10,12 @@ import { useEffect, useState } from 'react';
 // Call this on success:
 function GamePhone() {
   const [searchParams] = useSearchParams();
+  const [tip, setTip]=useState("")
+  const [score,setScore]=useState(0);
   const Gameid = searchParams.get('ids'); // Gets the value of the `id` parameter
   const [trys,setTrys]=useState(0);
-  const { prompt, setPrompt, imageURL, loading, handleGenerate } = useImageGenerator(Gameid, setTrys);
+  const { prompt, setPrompt, imageURL, loading, handleGenerate } = useImageGenerator(Gameid, setTrys, setTip, setScore);
+
 
 
    useEffect(() => {
@@ -35,7 +38,6 @@ function GamePhone() {
 
   return (
     <div className="Gamepage">
-      <h1>{trys}</h1>
       <img className='imglogo' src="images/plailogo.svg" alt="logo" />
       <ToastContainer />
       <div className="ImageAndSubs">
@@ -57,13 +59,30 @@ function GamePhone() {
             >send</button>
           </div>
 
+          {imageURL ? 
+           <div>
+          <div className='UserTip'>
+            <h1>Tip</h1>
+            <p>{tip}</p>
+          </div>
+           <div className='score'>
+            <h1>Score</h1>
+            <p>{score}</p>
+          </div>
+
+          </div>
+          
+          :
+
           <div>
             <h3>איך לכתוב פרומט שייצר תמונה זהה:</h3>
             <Tip title={"להיות מדויקים"} tip={"לתאר את הפרטים המרכזים בתמונה"} />
-           <Tip title={"להיות מדויקים"} tip={"לתאר את הפרטים המרכזים בתמונה"} />
+            <Tip title={"להיות מדויקים"} tip={"לתאר את הפרטים המרכזים בתמונה"} />
           </div>
+            }
         </div>
       </div>
+      <div></div>
       {loading && <p>טוען תמונה...</p>}
     </div>
   );

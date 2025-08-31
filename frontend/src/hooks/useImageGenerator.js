@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import SaveSub from '../hooks/SaveSub';
 
-export default function useImageGenerator(Gameid, setTrys) {
+export default function useImageGenerator(Gameid, setTrys ,SetTip,SetScore) {
   const [prompt, setPrompt] = useState('');
   const [imageURL, setImageURL] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,9 @@ export default function useImageGenerator(Gameid, setTrys) {
           "GOOD PROMPT MY BOY",
           "77",
           Gameid,
-          setTrys
+          setTrys,
+          SetTip,
+          SetScore
         );
       } else {
         alert("לא התקבלה תמונה");

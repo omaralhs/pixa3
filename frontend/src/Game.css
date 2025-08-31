@@ -22,7 +22,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 50%;
+    height: 60%;
     width: 70%;
     align-self: center;
 
@@ -67,7 +67,7 @@
         grid-template-columns: 1fr 1fr 1fr;
         gap: 16px;
         width: 55%;
-        height: 100%;
+        height: 90%;
         background-color: #4d1989;
         border-radius: 8px;
         border: #ffffff33 solid 2px;
@@ -339,7 +339,7 @@ input:focus {
 .image-item {
     position: relative;
     border-radius: 8px;
-    height: 400px; /* example fixed height */
+    aspect-ratio: 1 / 1;  /* keeps height equal to width */
     overflow: hidden;
 }
 
@@ -404,7 +404,7 @@ input:focus {
 .GameCode{
     display: flex;
     flex-direction:  row-reverse;
-    width: 40%;
+    width: 55%;
     border-radius: 8px;
     color: white;
     font-size: 24px;
@@ -705,4 +705,36 @@ p{
 
 .hide{
     display: none;
+}
+
+.UserTip{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    background-color: #4d1989;
+    padding: 8px;
+    border-radius: 16px;
+}
+
+.UserTip h1{
+    margin: 0;
+    padding: 0;
+}
+.score{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    background-color: #4d1989;
+    padding: 8px;
+    border-radius: 16px;
+}
+
+.score h1{
+    margin: 0;
+    padding: 0;
 }

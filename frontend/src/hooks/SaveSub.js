@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-export default async function saveSubmission(prompt, imageURL,user_name,tip,score,game_id,setTrys) {
+export default async function saveSubmission(prompt, imageURL,user_name,tip,score,game_id,setTrys,SetTip,SetScore) {
   const res = await fetch('http://localhost:5000/save', {
     credentials: 'include',
     method: 'POST',
@@ -12,6 +12,8 @@ export default async function saveSubmission(prompt, imageURL,user_name,tip,scor
       // Update trys state with the value returned from the backend
       if (setTrys && data.numberOfTrys !== undefined) {
         setTrys(data.numberOfTrys);
+        SetTip(data.Tip)
+        SetScore(data.Score)
       }
     }  console.log(res)   
   toast.success("ההגשה נשמרה בהצלחה!" +res.numberOfTrys);
