@@ -151,7 +151,7 @@ app.post("/chat",
         model: "gpt-4o-mini", // or another GPT model
         messages: [
           { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: message },
+          { role: "user", content: process.env.GptPrompt+message },
         ],
       }),
     });
@@ -187,8 +187,8 @@ res.json({ reply: data.choices[0].message.content });
       body: JSON.stringify({
         model: "gpt-4o-mini", // or another GPT model
         messages: [
-          { role: "system", content: process.env.GptPrompt },
-          { role: "user", content: process.env.userPrompt.replace("{user prompt }", message) },
+          { role: "system", content: "You are a helpful assistant." },
+          { role: "user", content: process.env.GptPrompt+message },
         ],
       }),
     });
@@ -371,44 +371,64 @@ app.get('/gettrys', async (req, res) => {
 
 
 app.post('/Save', async (req, res) => {
-  const userId =  req.userId; // 🔑 pass userId in query
+  const userId = req.userId; // 🔑 Pass userId in query
   let { imageURL, prompt, tip, score, user_name, game_id } = req.body;
-  score = Number(score); // 🔑 convert to number
+  score = Number(score); // 🔑 Convert to number
 
-  let feedbackRow = await complete(prompt);
-  let feedback = JSON.parse(feedbackRow);
-  tip = feedback.tip;
-  score = feedback.score;
-  console.log("tip from open ai"+tip);
   try {
-    // Await the select query
-   const result = await db.query(
+    // ✅ Get feedback from OpenAI
+    let feedbackRow = await complete(prompt);
+    let feedback = JSON.parse(feedbackRow);
+    tip = feedback.tip;
+    score = feedback.score;
+    console.log("Feedback from OpenAI:"+ feedback.score);
+    
+    // ✅ Fetch user's first_name from the database
+    const userResult = await db.query(
+      "SELECT firstname FROM users WHERE id = $1",
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const firstName = userResult.rows[0].firstname;
+    console.log("User's first name:", firstName);
+
+    // ✅ Check how many times this user has submitted for this game
+    const result = await db.query(
       "SELECT COUNT(*) FROM submission WHERE game_id = $1 AND user_id = $2",
       [game_id, userId]
     );
-    console.log("gameid:", game_id, "userId:", userId, "Count result:", result.rows);
 
-    console.log("result"+ result.rows)
     let trys = result.rows[0].count == 0 ? 1 : 2;
-    console.log("result rows:", result.rows);
-    console.log("Received data:", { imageURL, prompt, tip, score, user_name, game_id, trys, userId });
+    console.log("Received data:", {
+      imageURL, prompt, tip, score, user_name, game_id, trys, userId
+    });
 
-   
+    // ✅ Insert the submission
     await db.query(
       'INSERT INTO submission (image_url, prompt, tip, score, user_name, game_id, trys, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-      [imageURL, prompt, tip, score, user_name, game_id, trys, userId]
+      [imageURL, prompt, tip, score, firstName, game_id, trys, userId]
     );
 
-    
     // ✅ Notify all clients in this game room who are waiting for subs
     io.to(game_id).emit("subs_updated");
 
-    res.status(200).json({ message: 'Submission saved successfully', numberOfTrys: trys, Tip: tip, Score: score });
+    res.status(200).json({
+      message: 'Submission saved successfully',
+      numberOfTrys: trys,
+      Tip: tip,
+      Score: score,
+    });
+
   } catch (err) {
     console.error('Error saving submission:', err);
     res.status(500).json({ error: 'Failed to save submission' });
   }
 });
+
 
 app.get("/image-number", async (req, res) => {
   const gameID = req.query.gameID; // get from ?gameID=123
@@ -545,7 +565,6 @@ app.post('/gen', async (req, res) => {
         }
 
         let name = await db.query("SELECT firstname FROM users WHERE id = $1", [req.userId]);
-        console.log("the user name is ***************************************** :"+name.rows[0].firstname)
 
 
         // Return the image URL
