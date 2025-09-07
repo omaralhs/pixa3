@@ -414,10 +414,10 @@ app.post('/Save', async (req, res) => {
              tip = $3,
              score = $4,
              user_name = $5,
-             trys = $6
-             final_score= final_score + $4
+             trys = $6,
+             final_score= final_score + $9
          WHERE game_id = $7 AND user_id = $8`,
-        [imageURL, prompt, tip, score, firstName, trys, game_id, userId]
+        [imageURL, prompt, tip, score, firstName, trys, game_id, userId , score]
       );
 
       console.log("Updated existing submission");
@@ -427,8 +427,8 @@ app.post('/Save', async (req, res) => {
 
       await db.query(
         `INSERT INTO submission (image_url, prompt, tip, score, user_name, game_id, trys, user_id, final_score)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8 , $4)`,
-        [imageURL, prompt, tip, score, firstName, game_id, trys, userId]
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8 , $9)`,
+        [imageURL, prompt, tip, score, firstName, game_id, trys, userId, score]
       );
 
       console.log("Inserted new submission");
