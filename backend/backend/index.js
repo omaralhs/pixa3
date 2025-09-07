@@ -450,6 +450,35 @@ app.post('/Save', async (req, res) => {
   }
 });
 
+app.get('/gettopplayers/:game_id', async (req, res) => {
+  const { game_id } = req.params;
+
+  try {
+    // ✅ Join submissions with users to get full user info
+    const result = await db.query(
+      `SELECT 
+         u.id AS user_id,
+         u.firstname,
+         u.avatar,
+         s.score,
+         s.final_score,
+         s.trys
+       FROM submission s
+       JOIN users u ON s.user_id = u.id
+       WHERE s.game_id = $1
+       ORDER BY s.final_score DESC`,
+      [game_id]
+    );
+    console.log("Top players for game", game_id, result.rows);
+    res.status(200).json({
+      players: result.rows
+    });
+
+  } catch (err) {
+    console.error("Error fetching top players:", err);
+    res.status(500).json({ error: "Failed to fetch top players" });
+  }
+});
 
 
 app.get("/image-number", async (req, res) => {
