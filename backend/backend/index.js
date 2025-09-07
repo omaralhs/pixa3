@@ -371,9 +371,9 @@ app.get('/gettrys', async (req, res) => {
 
 
 app.post('/Save', async (req, res) => {
-  const userId = req.userId; // 🔑 Pass userId in query
+  const userId = req.userId; // 🔑 Pass userId in query or token
   let { imageURL, prompt, tip, score, user_name, game_id } = req.body;
-  score = Number(score); // 🔑 Convert to number
+  score = Number(score); // 🔑 Ensure score is a number
 
   try {
     // ✅ Get feedback from OpenAI
@@ -381,8 +381,8 @@ app.post('/Save', async (req, res) => {
     let feedback = JSON.parse(feedbackRow);
     tip = feedback.tip;
     score = feedback.score;
-    console.log("Feedback from OpenAI:"+ feedback.score);
-    
+    console.log("Feedback from OpenAI:", feedback.score);
+
     // ✅ Fetch user's first_name from the database
     const userResult = await db.query(
       "SELECT firstname FROM users WHERE id = $1",
@@ -396,24 +396,45 @@ app.post('/Save', async (req, res) => {
     const firstName = userResult.rows[0].firstname;
     console.log("User's first name:", firstName);
 
-    // ✅ Check how many times this user has submitted for this game
-    const result = await db.query(
-      "SELECT COUNT(*) FROM submission WHERE game_id = $1 AND user_id = $2",
+    // ✅ Check if a submission already exists for this user and game
+    const existing = await db.query(
+      "SELECT trys FROM submission WHERE game_id = $1 AND user_id = $2",
       [game_id, userId]
     );
 
-    let trys = result.rows[0].count == 0 ? 1 : 2;
-    console.log("Received data:", {
-      imageURL, prompt, tip, score, user_name, game_id, trys, userId
-    });
+    let trys;
+    if (existing.rows.length > 0) {
+      // 🔁 Update existing submission
+      trys = Number(existing.rows[0].trys) + 1;
 
-    // ✅ Insert the submission
-    await db.query(
-      'INSERT INTO submission (image_url, prompt, tip, score, user_name, game_id, trys, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-      [imageURL, prompt, tip, score, firstName, game_id, trys, userId]
-    );
+      await db.query(
+        `UPDATE submission
+         SET image_url = $1,
+             prompt = $2,
+             tip = $3,
+             score = $4,
+             user_name = $5,
+             trys = $6
+             final_score= final_score + $4
+         WHERE game_id = $7 AND user_id = $8`,
+        [imageURL, prompt, tip, score, firstName, trys, game_id, userId]
+      );
 
-    // ✅ Notify all clients in this game room who are waiting for subs
+      console.log("Updated existing submission");
+    } else {
+      // 🆕 Insert new submission
+      trys = 1;
+
+      await db.query(
+        `INSERT INTO submission (image_url, prompt, tip, score, user_name, game_id, trys, user_id, final_score)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8 , $4)`,
+        [imageURL, prompt, tip, score, firstName, game_id, trys, userId]
+      );
+
+      console.log("Inserted new submission");
+    }
+
+    // ✅ Notify all clients in this game room
     io.to(game_id).emit("subs_updated");
 
     res.status(200).json({
@@ -428,6 +449,7 @@ app.post('/Save', async (req, res) => {
     res.status(500).json({ error: 'Failed to save submission' });
   }
 });
+
 
 
 app.get("/image-number", async (req, res) => {

@@ -738,3 +738,120 @@ p{
     margin: 0;
     padding: 0;
 }
+.scoreboard-page{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-image: url('../public/images/backgroundGame.png');
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    background-size: cover;       
+    background-repeat: no-repeat; 
+    background-position: center;
+    justify-content: end;
+    align-items: center;
+    gap: 24px;
+}
+.img1{
+    position: absolute;
+    width: 450px;
+    height: 250px;
+    top: 0;
+    right: 0;
+}
+.img2{
+    position: absolute;
+    width: 450px;
+    height: 250px;
+    top: 0;
+    left: 0;
+}
+.scoreboard-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    width: 60%;
+    height: 70%;
+    z-index: 1;
+}
+.lines{
+    display: flex;
+    flex-direction: row;
+}
+.line1{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 228px;
+}
+.backgroundline1{
+background-image: linear-gradient(to bottom, #2912d400, #8660ee78, #c18ffedf);
+    height: 340px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.block{
+  display: block; /* prevents default inline spacing */
+}
+
+.backgroundline2{
+    background-image: linear-gradient(to bottom, #2912d400, #8660ee78, #c18ffedf);
+    height: 410px;
+     display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: outset 4px 0px 4px 0px #00000040;
+
+}
+
+
+.backgroundline3{
+    background-image: linear-gradient(to bottom, #2912d400, #8660ee78, #c18ffedf);
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.imgnumber{
+    margin-top: 35px;
+    width: 89px;
+    height: 105px;
+    align-self: center;
+}
+.line1 p {
+    background-color: #434061;
+    padding: 5px 16px;
+    border-radius: 20px;
+    display: inline-block;
+    align-self: center;
+}
+.line1 h2 {
+    display: inline-block;
+    align-self: center;
+    color: white;
+    font-size: 38px;
+    font-weight: 600;
+}
+
+.userimg{
+    align-self: center;
+    border-radius: 100%;
+    width: 80px;
+    height: 80px;
+
+}
+.bubble{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.exitbutt{
+    position: absolute;
+    bottom: 100px;
+    left: 100px;
+    
+}

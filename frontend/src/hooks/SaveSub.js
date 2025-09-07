@@ -15,7 +15,7 @@ export default async function saveSubmission(prompt, imageURL,user_name,tip,scor
         SetTip(data.Tip)
         SetScore(data.Score)
       }
-    }  console.log(res)   
-  toast.success("ההגשה נשמרה בהצלחה!" +res.numberOfTrys);
+    }  
+  toast.success("ההגשה נשמרה בהצלחה!");
   
 }
