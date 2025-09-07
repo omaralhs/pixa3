@@ -9,13 +9,30 @@ export default function ScoreBoard() {
   function gotopage() {
     navigate('/');
   }
-  React.useEffect(() => {
-    setImages([
-      "https://api.dicebear.com/9.x/bottts/svg?seed=1",
-      "https://api.dicebear.com/9.x/bottts/svg?seed=2",
-      "https://api.dicebear.com/9.x/bottts/svg?seed=3"
-    ]);
-  }, []); 
+ React.useEffect(() => {
+  async function fetchPlayers() {
+    try {
+      const res = await fetch(`http://localhost:5000/gettopplayers/${gameId}`);
+      const data = await res.json();
+
+      // ✅ Extract avatars from the players list
+      const avatars = (data.players || []).map(p => p.avatar);
+
+      // Fallback: if not enough avatars, fill with Dicebear
+      while (avatars.length < 3) {
+        avatars.push(`https://api.dicebear.com/9.x/bottts/svg?seed=${avatars.length + 1}`);
+      }
+
+      setImages(avatars);
+    } catch (err) {
+      console.error("Failed to fetch players:", err);
+    }
+  }
+
+  if (gameId) {
+    fetchPlayers();
+  }
+}, [gameId]);
 
   return (
     <div className="scoreboard-page">
