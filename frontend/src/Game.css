@@ -836,13 +836,32 @@ background-image: linear-gradient(to bottom, #2912d400, #8660ee78, #c18ffedf);
     font-weight: 600;
 }
 
-.userimg{
-    align-self: center;
-    border-radius: 100%;
-    width: 80px;
-    height: 80px;
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
 
+  40% {
+    transform: translateY(-20px);
+  }
+
+  60% {
+    transform: translateY(-10px);
+  }
 }
+
+.userimg {
+  align-self: center;
+  border-radius: 100%;
+  width: 80px;
+  height: 80px;
+
+  /* Animation applied */
+  animation: bounce 1s ease infinite;
+  animation-delay: 0s;
+  animation-duration: 3s; /* Full cycle takes 3s */
+}
+
 .bubble{
     display: flex;
     flex-direction: column;
