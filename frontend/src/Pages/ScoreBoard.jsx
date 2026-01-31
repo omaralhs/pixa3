@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 export default function ScoreBoard() {
   const [images, setImages] = React.useState([]);
+  const [users, setUsers] = React.useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -15,6 +16,7 @@ export default function ScoreBoard() {
       const res = await fetch(`http://localhost:5000/gettopplayers/${gameId}`);
       const data = await res.json();
 
+      setUsers(data.players || []);
       // ✅ Extract avatars from the players list
       const avatars = (data.players || []).map(p => p.avatar);
 
@@ -53,7 +55,7 @@ export default function ScoreBoard() {
             </div>
           </div>
           <div className="line1">
-            <img className='userimg' src={images[1]} alt="" />
+            <img className='userimg' src={images[0]} alt="" />
             <div className="bubble">
               <h2>Omar</h2>
               <p>4 points</p>
@@ -64,7 +66,7 @@ export default function ScoreBoard() {
             </div>
           </div>
           <div className="line1">
-            <img className='userimg' src={images[1]} alt="" />
+            <img className='userimg' src={images[3]} alt="" />
             <div className="bubble">
               <h2>Omar</h2>
               <p>4 points</p>
