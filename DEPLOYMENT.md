@@ -477,6 +477,139 @@ sudo journalctl -u nginx -f
 
 ---
 
+## 🚀 CI/CD with GitHub Actions
+
+### Automatic Deployment Setup
+
+The project uses GitHub Actions for continuous deployment. Every push to the `main` branch automatically deploys to the server.
+
+#### **How It Works:**
+
+```
+1. Push code to GitHub main branch
+   ↓
+2. GitHub Actions triggers workflow
+   ↓
+3. Connects to EC2 server via SSH
+   ↓
+4. Pulls latest code
+   ↓
+5. Installs dependencies
+   ↓
+6. Restarts backend (PM2)
+   ↓
+7. Rebuilds frontend
+   ↓
+8. Deployment complete! ✅
+```
+
+#### **Workflow File:**
+
+Location: `.github/workflows/deploy.yml`
+
+```yaml
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to EC2 Server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: 54.90.149.64
+        username: ubuntu
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        timeout: 60s
+        command_timeout: 15m
+        script: |
+          cd ~/pixa3
+          git pull origin main
+          
+          # Update backend
+          cd backend
+          npm install --production
+          pm2 restart pixa-backend
+          
+          # Update frontend
+          cd ../frontend
+          npm install
+          npm run build
+          
+          echo "✅ Deployment complete!"
+```
+
+#### **Prerequisites:**
+
+1. **SSH Key for Git (on server):**
+   ```bash
+   # Generate SSH key
+   ssh-keygen -t ed25519 -C "your_email@example.com"
+   
+   # Add public key to GitHub
+   cat ~/.ssh/id_ed25519.pub
+   # Copy and add to: https://github.com/settings/keys
+   
+   # Change Git remote to SSH
+   cd ~/pixa3
+   git remote set-url origin git@github.com:omaralhs/pixa3.git
+   ```
+
+2. **GitHub Secret (SSH_PRIVATE_KEY):**
+   - Go to: https://github.com/omaralhs/pixa3/settings/secrets/actions
+   - Add secret named `SSH_PRIVATE_KEY`
+   - Value: Content of your `pixa-key.pem` file
+
+3. **AWS Security Group:**
+   - Allow SSH (port 22) from GitHub Actions IPs
+   - Or allow from anywhere (0.0.0.0/0) for simplicity
+
+#### **Deployment Time:**
+
+- Pull code: ~5 seconds
+- Install backend deps: ~10 seconds
+- Restart backend: ~2 seconds
+- Install frontend deps: ~20 seconds
+- Build frontend: ~30 seconds
+- **Total: ~1-2 minutes**
+
+#### **View Deployment Status:**
+
+1. Go to: https://github.com/omaralhs/pixa3/actions
+2. Click on latest workflow run
+3. View real-time logs
+4. Check deployment status
+
+#### **Manual Deployment (if needed):**
+
+```bash
+# SSH into server
+ssh -i pixa-key.pem ubuntu@54.90.149.64
+
+# Navigate to project
+cd ~/pixa3
+
+# Pull latest code
+git pull origin main
+
+# Update backend
+cd backend
+npm install --production
+pm2 restart pixa-backend
+
+# Update frontend
+cd ../frontend
+npm install
+npm run build
+```
+
+---
+
 ## 🎯 Next Steps
 
 ### Recommended Improvements:

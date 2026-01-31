@@ -52,7 +52,39 @@ sudo tail -f /var/log/postgresql/postgresql-14-main.log
 
 ## 🔧 Updating Application
 
-### Update Backend Code
+### Automatic Updates (CI/CD)
+
+**The application automatically deploys when you push to GitHub!**
+
+```bash
+# On your local machine
+git add .
+git commit -m "Your changes"
+git push origin main
+
+# GitHub Actions automatically:
+# 1. Connects to server
+# 2. Pulls latest code
+# 3. Installs dependencies
+# 4. Restarts backend
+# 5. Rebuilds frontend
+# 6. Deployment complete! ✅
+```
+
+**View deployment status:**
+- Go to: https://github.com/omaralhs/pixa3/actions
+- Click on latest workflow run
+- Watch real-time deployment logs
+
+**Deployment time:** ~1-2 minutes
+
+---
+
+### Manual Update (if needed)
+
+If you need to update manually or CI/CD fails:
+
+#### **Update Backend Code**
 
 ```bash
 # 1. Connect to server
@@ -75,7 +107,7 @@ pm2 list
 pm2 logs pixa-backend --lines 20
 ```
 
-### Update Frontend Code
+#### **Update Frontend Code**
 
 ```bash
 # 1. Navigate to frontend directory
@@ -90,8 +122,7 @@ npm install
 # 4. Rebuild production files
 npm run build
 
-# 5. Restart Nginx
-sudo systemctl restart nginx
+# 5. No need to restart Nginx (serves new files automatically)
 
 # 6. Clear browser cache and test
 # Visit: http://54.90.149.64
