@@ -15,5 +15,7 @@ jobs:
         host: 54.90.149.64
         username: ubuntu
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        timeout: 60s
+        command_timeout: 15m
         script: |
           ~/deploy.sh
