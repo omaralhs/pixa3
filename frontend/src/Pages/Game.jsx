@@ -5,6 +5,7 @@ import GetSubs from '../hooks/GetSubs';
 import Sub from '../components/Sub';
 import { useSearchParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import API_URL from '../config';
 
 export default function Game() {
   const [subs, setSubs] = useState([]);
@@ -20,7 +21,7 @@ export default function Game() {
 
   // Socket.io for live subs updates
   useEffect(() => {
-    const socket = io("http://localhost:5000");
+    const socket = io(API_URL);
 
     socket.emit("waiting_for_subs", gameID);
 
@@ -47,7 +48,7 @@ export default function Game() {
   useEffect(() => {
     async function fetchImages() {
       try {
-        const res = await fetch(`http://localhost:5000/game-images?gameID=${gameID}`,
+        const res = await fetch(`${API_URL}/game-images?gameID=${gameID}`,
           {     credentials: 'include',
           }
         );

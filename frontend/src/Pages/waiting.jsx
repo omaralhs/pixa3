@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
+import API_URL from '../config';
 
 export default function Waiting() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function Waiting() {
 
     const checkGameStarted = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/check_game_started?game_id=${gameId}`,{
+        const res = await fetch(`${API_URL}/check_game_started?game_id=${gameId}`,{
           credentials: 'include',
         });
         const data = await res.json();
@@ -34,7 +35,7 @@ export default function Waiting() {
   useEffect(() => {
     if (!gameId) return;
 
-    const socket = io("http://localhost:5000",{
+    const socket = io(API_URL,{
       credentials: 'include',
     });
 

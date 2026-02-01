@@ -1,5 +1,7 @@
+import API_URL from '../config';
+
 export default async function GetSubs(game_id) {
-  const response = await fetch('http://localhost:5000/GetSubs', {
+  const response = await fetch(`${API_URL}/GetSubs`, {
     credentials: 'include',
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
