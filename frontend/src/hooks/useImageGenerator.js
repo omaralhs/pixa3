@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import SaveSub from '../hooks/SaveSub';
+import API_URL from '../config';
 
 export default function useImageGenerator(Gameid, setTrys ,SetTip,SetScore) {
   const [prompt, setPrompt] = useState('');
@@ -13,7 +14,7 @@ export default function useImageGenerator(Gameid, setTrys ,SetTip,SetScore) {
     setImageURL('');
 
     try {
-      const response = await fetch("http://localhost:5000/gen", {
+      const response = await fetch(`${API_URL}/gen`, {
         credentials: 'include',
         method: "POST",
         headers: { "Content-Type": "application/json" },

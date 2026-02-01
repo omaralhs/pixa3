@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 
 export default function ScoreBoard() {
   const [images, setImages] = React.useState([]);
@@ -12,7 +13,7 @@ export default function ScoreBoard() {
   React.useEffect(() => {
     async function fetchPlayers() {
       try {
-        const res = await fetch(`http://localhost:5000/gettopplayers/${gameId}`);
+      const res = await fetch(`${API_URL}/gettopplayers/${gameId}`);
         const data = await res.json();
 
         let players = data.players || [];
@@ -43,7 +44,7 @@ export default function ScoreBoard() {
  React.useEffect(() => {
   async function fetchPlayers() {
     try {
-      const res = await fetch(`http://localhost:5000/gettopplayers/${gameId}`);
+      const res = await fetch(`${API_URL}/gettopplayers/${gameId}`);
       const data = await res.json();
 
       setUsers(data.players || []);

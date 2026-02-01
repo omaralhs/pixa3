@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import API_URL from '../config';
 
 export default function StudentTips() {
     const location = useLocation();
@@ -7,7 +8,7 @@ export default function StudentTips() {
     const gameId = searchParams.get("ids");
     const navigate = useNavigate();
     const GoToGame = () => {
-        fetch('http://localhost:5000/start_game', {
+        fetch(`${API_URL}/start_game`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

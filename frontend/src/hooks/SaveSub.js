@@ -1,7 +1,8 @@
 import { toast } from 'react-toastify';
+import API_URL from '../config';
 
 export default async function saveSubmission(prompt, imageURL,user_name,tip,score,game_id,setTrys,SetTip,SetScore) {
-  const res = await fetch('http://localhost:5000/save', {
+  const res = await fetch(`${API_URL}/save`, {
     credentials: 'include',
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

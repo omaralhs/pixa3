@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 
 export default function Signin() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function Signin() {
     if (name === '' || image === '') {
       return alert("Please fill in all fields before proceeding");
     }
-    fetch('http://localhost:5000/inserUser', {
+    fetch(`${API_URL}/inserUser`, {
       credentials: 'include',
       method: 'POST',
       headers: {

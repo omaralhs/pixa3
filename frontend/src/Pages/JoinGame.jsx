@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import OtpInput from 'react-otp-input';
 import {  useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 
 export default function JoinGame() {
   const [otp, setOtp] = useState('');
   const navigate = useNavigate();
   
   const GoToWait = () => {
-    const res=fetch('http://localhost:5000/join_game', {
+    const res=fetch(`${API_URL}/join_game`, {
       credentials: 'include',
       method: 'POST',
       headers: {

@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import API_URL from '../config';
 
 // Call this on success:
 function GamePhone() {
@@ -21,7 +22,7 @@ function GamePhone() {
    useEffect(() => {
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/gettrys?gameid=${Gameid}`,{
+      const res = await fetch(`${API_URL}/gettrys?gameid=${Gameid}`,{
         credentials: 'include',
       });
       const data = await res.json();

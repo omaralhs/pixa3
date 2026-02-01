@@ -3,6 +3,7 @@ import QRCode from 'qrcode';
 import { useLocation, useNavigate } from 'react-router-dom';
 import UserCard from '../components/UserCard';
 import { io } from 'socket.io-client';
+import API_URL from '../config';
 
 export default function QrCode() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function QrCode() {
 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:5000/gameusers?ids=${gameId}`, {
+      const response = await fetch(`${API_URL}/gameusers?ids=${gameId}`, {
         credentials: 'include',
       });
       const userData = await response.json();
@@ -49,7 +50,7 @@ export default function QrCode() {
     if (!gameId) return;
 
     // Connect socket.io client
-    const socket = io('http://localhost:5000');
+    const socket = io(API_URL.replace('/api', ''));
 
     // Join the game room to listen for events related to this game
     socket.emit('waiting_for_users', gameId);
