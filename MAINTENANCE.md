@@ -4,8 +4,8 @@
 
 This guide covers daily operations, updates, troubleshooting, and maintenance tasks for the PIXA application deployed on AWS EC2.
 
-**Server:** 54.90.149.64  
-**SSH Access:** `ssh -i pixa-key.pem ubuntu@54.90.149.64`
+**Server:** 54.88.53.94 (Elastic IP)  
+**SSH Access:** `ssh -i pixa-key.pem ubuntu@54.88.53.94`
 
 ---
 
@@ -88,7 +88,7 @@ If you need to update manually or CI/CD fails:
 
 ```bash
 # 1. Connect to server
-ssh -i pixa-key.pem ubuntu@54.90.149.64
+ssh -i pixa-key.pem ubuntu@54.88.53.94
 
 # 2. Navigate to backend directory
 cd ~/pixa3/backend
@@ -125,7 +125,7 @@ npm run build
 # 5. No need to restart Nginx (serves new files automatically)
 
 # 6. Clear browser cache and test
-# Visit: http://54.90.149.64
+# Visit: http://54.88.53.94
 ```
 
 ### Update Environment Variables
@@ -339,7 +339,7 @@ sudo ss -tlnp | grep 80
 time curl http://localhost:5000/health
 
 # Check Nginx response time
-time curl http://54.90.149.64/api/health
+time curl http://54.88.53.94/api/health
 
 # Test database connection
 time psql -U pixauser -d pixa -h localhost -c "SELECT 1;"

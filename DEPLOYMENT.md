@@ -5,7 +5,7 @@
 **Project:** PIXA - AI-Powered Image Generation Game  
 **Deployment Date:** January 31, 2026  
 **Server Location:** AWS EC2 (us-east-1)  
-**Public IP:** 54.90.149.64  
+**Public IP:** 54.88.53.94 (Elastic IP)  
 **Deployment Type:** Single Ubuntu Instance (All-in-One)
 
 ---
@@ -42,7 +42,7 @@
             Internet (Port 80 - HTTP)
                          ↓
               Users Access via Browser
-           http://54.90.149.64
+           http://54.88.53.94
 ```
 
 ---
@@ -81,7 +81,7 @@
 
 ```bash
 # Connect to server
-ssh -i /path/to/pixa-key.pem ubuntu@54.90.149.64
+ssh -i /path/to/pixa-key.pem ubuntu@54.88.53.94
 
 # Set correct permissions on key file (if needed)
 chmod 400 /path/to/pixa-key.pem
@@ -195,7 +195,7 @@ DB_PORT=5432
 
 # Server Configuration
 PORT=5000
-FRONTEND_URL=http://54.90.149.64
+FRONTEND_URL=http://54.88.53.94
 
 # API Keys
 RUNWARE_API_KEY=your_runware_api_key
@@ -230,7 +230,7 @@ curl http://localhost:5000/health  # Should return JSON
 cd ~/pixa3/frontend
 
 # Create environment file
-echo "REACT_APP_API_URL=http://54.90.149.64" > .env
+echo "REACT_APP_API_URL=http://54.88.53.94" > .env
 ```
 
 ### 2. Install Dependencies and Build
@@ -263,7 +263,7 @@ sudo nano /etc/nginx/sites-available/pixa
 ```nginx
 server {
     listen 80;
-    server_name 54.90.149.64;
+    server_name 54.88.53.94;
 
     # Frontend - Serve React build files
     location / {
@@ -333,18 +333,18 @@ sudo ufw status
 
 **Frontend (Main Application):**
 ```
-http://54.90.149.64
+http://54.88.53.94
 ```
 
 **Backend API (through Nginx proxy):**
 ```
-http://54.90.149.64/api/health
-http://54.90.149.64/api/getimages
+http://54.88.53.94/api/health
+http://54.88.53.94/api/getimages
 ```
 
 **Socket.IO (through Nginx proxy):**
 ```
-ws://54.90.149.64/socket.io/
+ws://54.88.53.94/socket.io/
 ```
 
 **Direct Backend Access (localhost only):**
@@ -522,7 +522,7 @@ jobs:
     - name: Deploy to EC2 Server
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: 54.90.149.64
+        host: 54.88.53.94
         username: ubuntu
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         timeout: 60s
@@ -589,7 +589,7 @@ jobs:
 
 ```bash
 # SSH into server
-ssh -i pixa-key.pem ubuntu@54.90.149.64
+ssh -i pixa-key.pem ubuntu@54.88.53.94
 
 # Navigate to project
 cd ~/pixa3
