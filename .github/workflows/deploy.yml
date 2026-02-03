@@ -19,7 +19,15 @@ jobs:
         command_timeout: 15m
         script: |
           cd ~/pixa3
+          
+          # Stash any local changes to .env files
+          git stash
+          
+          # Pull latest code
           git pull origin main
+          
+          # Restore stashed changes
+          git stash pop || echo "No stash to restore"
           
           # Update backend
           cd backend
@@ -33,7 +41,14 @@ jobs:
           
           # Update frontend
           cd ../frontend
+          
+          # Stash any local .env changes in frontend too
+          git stash
+          
           npm install
           npm run build
+          
+          # Restore frontend .env if needed
+          git stash pop || echo "No frontend stash to restore"
           
           echo "✅ Deployment complete!"
