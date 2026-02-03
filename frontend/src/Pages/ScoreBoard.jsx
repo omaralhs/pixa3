@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import API_URL from '../config';
 
 export default function ScoreBoard() {
-  const [images, setImages] = React.useState([]);
   const [users, setUsers] = React.useState([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,7 +12,7 @@ export default function ScoreBoard() {
   React.useEffect(() => {
     async function fetchPlayers() {
       try {
-      const res = await fetch(`${API_URL}/gettopplayers/${gameId}`);
+        const res = await fetch(`${API_URL}/gettopplayers/${gameId}`);
         const data = await res.json();
 
         let players = data.players || [];
@@ -41,31 +40,6 @@ export default function ScoreBoard() {
   function goToHome() {
     navigate('/');
   }
- React.useEffect(() => {
-  async function fetchPlayers() {
-    try {
-      const res = await fetch(`${API_URL}/gettopplayers/${gameId}`);
-      const data = await res.json();
-
-      setUsers(data.players || []);
-      // ✅ Extract avatars from the players list
-      const avatars = (data.players || []).map(p => p.avatar);
-
-      // Fallback: if not enough avatars, fill with Dicebear
-      while (avatars.length < 3) {
-        avatars.push(`https://api.dicebear.com/9.x/bottts/svg?seed=${avatars.length + 1}`);
-      }
-
-      setImages(avatars);
-    } catch (err) {
-      console.error("Failed to fetch players:", err);
-    }
-  }
-
-  if (gameId) {
-    fetchPlayers();
-  }
-}, [gameId]);
 
   return (
     <div className="scoreboard-page">

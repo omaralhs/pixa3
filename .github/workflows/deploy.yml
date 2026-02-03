@@ -24,6 +24,11 @@ jobs:
           # Update backend
           cd backend
           npm install --production
+          
+          # Run database migrations
+          echo "🔄 Running database migrations..."
+          node run-migration.js || echo "⚠️ Migration may have already been applied"
+          
           pm2 restart pixa-backend
           
           # Update frontend
