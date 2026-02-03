@@ -21,16 +21,30 @@ export default function Game() {
 
   // Socket.io for live subs updates
   useEffect(() => {
-    const socket = io(API_URL);
+    if (!gameID) return;
 
-    socket.emit("waiting_for_subs", gameID);
+    const socket = io(API_URL, {
+      withCredentials: true,
+      transports: ['websocket', 'polling']
+    });
+
+    socket.on('connect', () => {
+      console.log('Socket connected in Game.jsx');
+      socket.emit("waiting_for_subs", gameID);
+    });
 
     socket.on("subs_updated", async () => {
+      console.log('Received subs_updated event');
       const result = await GetSubs(gameID);
       setSubs(result);
     });
 
+    socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
+    });
+
     return () => {
+      socket.off("subs_updated");
       socket.disconnect();
     };
   }, [gameID]);

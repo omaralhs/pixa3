@@ -1,5 +1,5 @@
 import db from '../config/database.js';
-import { getPromptFeedback } from '../services/openai.service.js';
+import { getPromptFeedback, translateToEnglish } from '../services/openai.service.js';
 
 export const getSubs = (req, res) => {
   const { game_id } = req.body;
@@ -60,13 +60,6 @@ export const saveSubmission = async (req, res) => {
   score = Number(score);
 
   try {
-    // Get feedback from OpenAI
-    let feedbackRow = await getPromptFeedback(prompt);
-    let feedback = feedbackRow;
-    tip = feedback.tip;
-    score = feedback.score;
-    console.log("Feedback from OpenAI:", feedback.score);
-
     // Fetch user's first_name from the database
     const userResult = await db.query(
       "SELECT firstname FROM users WHERE id = $1",
@@ -100,6 +93,31 @@ export const saveSubmission = async (req, res) => {
     );
 
     const image_id = imageIdResult.rows[0].image_id;
+
+    // Fetch the target prompt from the images table
+    const imagePromptResult = await db.query(
+      "SELECT prompt FROM images WHERE id = $1",
+      [image_id]
+    );
+
+    if (imagePromptResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+
+    const targetPrompt = imagePromptResult.rows[0].prompt || 'A creative AI-generated image';
+    console.log("Target prompt:", targetPrompt);
+    console.log("User prompt (original):", prompt);
+
+    // Translate user prompt to English if needed
+    const translatedPrompt = await translateToEnglish(prompt);
+    console.log("User prompt (translated):", translatedPrompt);
+
+    // Get feedback from OpenAI by comparing translated user prompt with target prompt
+    let feedbackRow = await getPromptFeedback(translatedPrompt, targetPrompt);
+    let feedback = feedbackRow;
+    tip = feedback.tip;
+    score = feedback.score;
+    console.log("Feedback from OpenAI:", feedback.score);
 
     // Check if a submission already exists for this user, game, and image
     const existing = await db.query(

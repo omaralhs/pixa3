@@ -18,19 +18,26 @@ const pool = new pg.Pool({
 });
 
 async function runMigration() {
-  console.log('🔄 Running database migration...');
-  
-  const sql = fs.readFileSync(
-    path.join(__dirname, 'migrations', 'add_image_id_to_submission.sql'),
-    'utf8'
-  );
+  console.log('🔄 Running database migrations...');
   
   try {
-    await pool.query(sql);
-    console.log('✅ Migration completed successfully!');
-    console.log('   - Added image_id column to submission table');
-    console.log('   - Set default image_id = 1 for existing submissions');
-    console.log('   - Added foreign key constraint to images table');
+    // Migration 1: Add image_id to submission table
+    const sql1 = fs.readFileSync(
+      path.join(__dirname, 'migrations', 'add_image_id_to_submission.sql'),
+      'utf8'
+    );
+    await pool.query(sql1);
+    console.log('✅ Migration 1 completed: image_id column added to submission table');
+
+    // Migration 2: Add prompt to images table
+    const sql2 = fs.readFileSync(
+      path.join(__dirname, 'migrations', 'add_prompt_to_images.sql'),
+      'utf8'
+    );
+    await pool.query(sql2);
+    console.log('✅ Migration 2 completed: prompt column added to images table');
+
+    console.log('\n🎉 All migrations completed successfully!');
   } catch (err) {
     console.error('❌ Migration failed:', err.message);
     console.error('Full error:', err);

@@ -35,14 +35,23 @@ export default function Waiting() {
   useEffect(() => {
     if (!gameId) return;
 
-    const socket = io(API_URL,{
-      credentials: 'include',
+    const socket = io(API_URL, {
+      withCredentials: true,
+      transports: ['websocket', 'polling']
     });
 
-    socket.emit("joinGame", gameId);
+    socket.on('connect', () => {
+      console.log('Socket connected in waiting.jsx');
+      socket.emit("joinGame", gameId);
+    });
 
     socket.on("started", () => {
+      console.log('Received started event, navigating to game_phone');
       navigate(`/game_phone?ids=${gameId}`);
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
     });
 
     return () => {

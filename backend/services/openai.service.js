@@ -14,7 +14,7 @@ export const chatWithOpenAI = async (message) => {
         model: "gpt-4o-mini",
         messages: [
           { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: process.env.GptPrompt + message },
+          { role: "user", content: message },
         ],
       }),
     });
@@ -39,10 +39,26 @@ export const chatWithOpenAI = async (message) => {
   }
 };
 
-export const getPromptFeedback = async (prompt) => {
+export const translateToEnglish = async (text) => {
   try {
-    const message = prompt.message || prompt;
+    const message = `Translate the following text to English. If it's already in English, return it unchanged. Return ONLY the translated text, no explanations, no extra words, no phrases like "Here is" or "Sure". Just the translation:\n\n"${text}"`;
+    
     const response = await chatWithOpenAI(message);
+    // Trim any quotes or extra whitespace
+    return response.trim().replace(/^["']|["']$/g, '');
+  } catch (error) {
+    console.error("Error translating text:", error);
+    // If translation fails, return original text
+    return text;
+  }
+};
+
+export const getPromptFeedback = async (userPrompt, targetPrompt) => {
+  try {
+    // Build the complete message with target and user prompts
+    const fullMessage = process.env.GptPrompt + targetPrompt + '"\n\nUser prompt: "' + userPrompt + '"';
+    
+    const response = await chatWithOpenAI(fullMessage);
     return JSON.parse(response);
   } catch (error) {
     console.error("Error getting prompt feedback:", error);
