@@ -46,8 +46,8 @@ curl http://localhost:5000/health
 
 ```bash
 # Test if Nginx proxy works
-curl http://54.88.53.94/api/health
-
+This site can’t be reached
+"
 # Expected: {"status":"OK","message":"Server is running"}
 # If this fails, Nginx configuration issue
 ```
